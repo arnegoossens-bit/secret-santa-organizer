@@ -44,15 +44,16 @@ De tokens staan als CSS custom properties bovenaan elk CSS-bestand.
 ### Flow
 1. **Intro** (`#intro`): uitleg, wat je vandaag kan verdienen, sponsor van de dag.
 2. **Vlucht** van `DURATION` = 45 s. `start()` → `reset()` → game loop `update(dt)`.
-3. **Eindscherm** (`showEnd()`): score, hintkaarten, gok van de dag, klassement, extra vlucht via sponsorvideo (`playAd()`, demo van 5 s).
+3. **Dagrecord** (`startCelebrate()`): alleen bij een nieuwe persoonlijke dagscore. 4 s vlucht rond de slee met vuurwerk, dit is de basis voor de highscore-video. Nu wordt er alleen een stilstaand beeld bewaard (`S.snap`); een echte clip opnemen kan met `canvas.captureStream()` + `MediaRecorder`.
+4. **Eindscherm** (`showEnd()`): score, hintkaarten, gok van de dag, klassement, extra vlucht via sponsorvideo (`playAd()`, demo van 5 s).
 
 ### Spelregels (constanten bovenaan en in de code)
 | Wat | Waar | Waarde |
 |---|---|---|
 | Duur van een vlucht | `DURATION` | 45 s |
-| Sterren voor hints | `HINT_STARS` | 2, 4 en 6 sterren openen hint 1, 2, 3 |
+| Hint van vandaag | `STREAK_FOR_HINT` | 1 hint per dag, vrijgespeeld met een reeks van 5 pakjes op rij raak (mis of toren = reeks terug naar 0) |
 | Pakje in schoorsteen | `deliver()` | +100 × combo (combo tot ×5, +1 per 2 treffers op rij) |
-| Ster | update-loop | +100 |
+| Ster | update-loop | +100 (alleen punten) |
 | Sponsorballon (door de ring) | update-loop | +150 |
 | Toren raken | `hurt()` | kost 1 van 3 mutsen, combo vervalt |
 | Valfysica pakje | `G`, `DROP_V` | 15 en 1.5 (de gouden ring rond een schoorsteen gebruikt dezelfde formule) |
@@ -60,9 +61,9 @@ De tokens staan als CSS custom properties bovenaan elk CSS-bestand.
 ### Data die nu hardcoded is en uit de API moet komen
 | In de code | Moet worden |
 |---|---|
-| `HINTS` | De 3 hints die de Secret Santa van deze speler schreef (mogen een vals spoor zijn) |
+| `TODAY_HINT` | De hint van vandaag die de Secret Santa van deze speler schreef (mag een vals spoor zijn) |
 | `PEOPLE` | Deelnemers van het feestje (voor de gok) |
-| `BOARD`, `ME_BASE` | Klassement van het feestje: scores van vandaag en totaal |
+| `BOARD_TODAY`, `BOARD_TOTAL`, `ME_TOTAL_BEFORE` | Highscores van het feestje: beste score van vandaag en som van de dagrecords |
 | `PAST`, `PAST_GUESSES` | Hints en gokken van eerdere adventsdagen |
 | `store` (localStorage) | Gok van vandaag en beste score: server-side per deelnemer opslaan |
 | Sponsor "Jouw Merk Hier" | Sponsor per adventsdag en per taal (naam, logo, video, cadeautip) |
@@ -81,4 +82,4 @@ In de browserconsole is de spelstatus beschikbaar als `window.__sl` (bijvoorbeel
 ## Nog niet in het prototype
 - Hints uitzetten ("verrassing bewaren") per deelnemer
 - Onthulling van echte en valse hints op het feest
-- Highscores per dag en totaal, deelnemerspagina met verlanglijsten (in ontwerp)
+- Echte opname en delen van de highscore-video

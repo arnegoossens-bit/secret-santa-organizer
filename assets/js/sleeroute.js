@@ -1,14 +1,14 @@
 (() => {
   "use strict";
-  const HINTS = [
-    "Drinkt elke ochtend twee koffie, zwart en zonder suiker.",
-    "Heeft dit jaar voor het eerst een moestuin aangelegd.",
-    "Zingt op elk kerstfeest het luidst van iedereen."
-  ];
-  const HINT_STARS = [2, 4, 6];
+  // ---- example data, to be replaced by the API (see DEVELOPERS.md) ----
+  const TODAY = 12;                                   // adventsdag
+  const TODAY_HINT = "Drinkt elke ochtend twee koffie, zwart en zonder suiker.";
+  const STREAK_FOR_HINT = 5;                          // pakjes op rij raak voor de hint van vandaag
   const PEOPLE = ["Sofie", "Jonas", "Lotte", "Wout", "Elif", "Bram", "Noor", "Tante Rita"];
-  const BOARD = [["Sofie", 6420], ["Jonas", 5980], ["Lotte", 5110], ["Wout", 4380], ["Elif", 3720], ["Bram", 2950], ["Noor", 2140]];
-  const ME_BASE = 4210, DURATION = 45;
+  const BOARD_TODAY = [["Sofie", 1650], ["Jonas", 1420], ["Wout", 1210], ["Lotte", 980], ["Noor", 820], ["Elif", 640], ["Bram", 0]];
+  const BOARD_TOTAL = [["Sofie", 14220], ["Jonas", 13180], ["Lotte", 11050], ["Wout", 9860], ["Elif", 8120], ["Bram", 6400], ["Noor", 5240]];
+  const ME_TOTAL_BEFORE = 9950;                       // jouw totaal over dag 1 tot 11
+  const DURATION = 45;
 
   const store = {
     get(k, d) { try { const v = localStorage.getItem("sl_" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
@@ -25,16 +25,20 @@
   ];
   const PAST_GUESSES = [[7, "Lotte"], [8, "Lotte"], [9, "Jonas"], [10, "Jonas"], [11, "Wout"]];
   function renderHints() {}
-  function boardRows(myToday) {
-    const rows = BOARD.map(([n, s]) => ({ n, s, me: false }));
-    rows.push({ n: "Jij", s: ME_BASE + (myToday || 0), me: true });
+  // highscores: "today" = beste score van vandaag, "total" = som van de dagrecords
+  let boardKind = "today";
+  function boardRows(kind, score) {
+    const myToday = Math.max(store.get("best_d" + TODAY, 0), score || 0);
+    const base = kind === "today" ? BOARD_TODAY : BOARD_TOTAL;
+    const rows = base.map(([n, s]) => ({ n, s, me: false }));
+    rows.push({ n: "Jij", s: kind === "today" ? myToday : ME_TOTAL_BEFORE + myToday, me: true });
     rows.sort((a, b) => b.s - a.s);
     return rows;
   }
-  function renderBoard(myToday) {
-    const rows = boardRows(myToday), lb = $("lb");
-    if (lb) lb.innerHTML = rows.map((r, i) => `<li class="${r.me ? "me" : ""}"><span class="rk">${i + 1}</span><span>${r.n}</span><span class="sc">${r.s.toLocaleString("nl-BE")}</span></li>`).join("");
-    return rows.findIndex(r => r.me) + 1;
+  function renderBoard(score) {
+    const lb = $("lb"); if (!lb) return;
+    const rows = boardRows(boardKind, score);
+    lb.innerHTML = rows.map((r, i) => `<li class="${r.me ? "me" : ""}"><span class="rk">${i + 1}</span><span>${r.n}${i === 0 ? ' <i class="crown" aria-label="eerste plaats">★</i>' : ""}</span><span class="sc">${r.s.toLocaleString("nl-BE")}</span></li>`).join("");
   }
   let showAll = false;
   function renderPast() {
@@ -573,7 +577,8 @@
       const lane = [rand(-1.2, 1.2), rand(-3.6, -1.5), rand(1.5, 3.6)][k];
       const o = buildStar(lane); o.g.position.z = z; scene.add(o.g); S.objs.push(o); S.starsSpawned++;
     });
-    renderHints(0); renderBoard(0); buildLives(); buildPips(); setCombo();
+    S.celebrated = false; S.snap = null; S.hintNow = false;
+    renderBoard(0); buildLives(); buildPips(); setCombo();
   }
   // populate the intro scene
   for (let z = 6; z > SPAWN_Z; z -= ROW_GAP) spawnRow(z);
@@ -601,7 +606,7 @@
     sfx.drop();
   }
   function hurt() {
-    S.lives--; S.inv = 1.6; S.shake = .5; S.combo = 0; setCombo();
+    S.lives--; S.inv = 1.6; S.shake = .5; S.combo = 0; setCombo(); buildPips();
     burst(new T.Vector3(S.x, SLEIGH_Y, 0), 0xc4583f, 40, 6);
     sfx.hit(); buildLives();
     const hf = $("hitflash"); hf.classList.add("on"); setTimeout(() => hf.classList.remove("on"), 60);
@@ -610,6 +615,11 @@
   }
   function deliver(h, p) {
     h.delivered = true; S.delivered++; S.combo++; S.best = Math.max(S.best, S.combo);
+    if (S.combo >= STREAK_FOR_HINT && !store.get("hint_d" + TODAY, false)) {
+      store.set("hint_d" + TODAY, true); S.hintNow = true;
+      setTimeout(() => { toast("Reeks van " + STREAK_FOR_HINT + "! Hint van vandaag vrijgespeeld"); sfx.hint(); }, 250);
+    }
+    buildPips();
     const m = setCombo(), pts = 100 * m;
     S.score += pts;
     h.wm.emissive.setHex(0xffb35c); h.wm.emissiveIntensity = 1.6; h.wm.color.setHex(0xffd9a0);
@@ -628,7 +638,24 @@
     if (S.mode === "intro") S.speed = 7;
     if (S.mode === "end") S.speed = 5;
     if (playing) { S.t += dt; S.speed = 15 + S.t * .2; }
-    if (S.mode === "landing") { S.endT += dt; S.speed = Math.max(4, S.speed - 12 * dt); if (S.endT > 1.5) showEnd(); }
+    if (S.mode === "landing") {
+      S.endT += dt; S.speed = Math.max(4, S.speed - 12 * dt);
+      if (S.endT > 1.5) {
+        const prev = store.get("best_d" + TODAY, 0);
+        if (S.score > prev && S.score > 0 && !S.celebrated) startCelebrate(prev); else showEnd();
+      }
+    }
+    if (S.mode === "celebrate") {
+      S.celT += dt; S.speed = 6; S.fwT -= dt;
+      if (S.fwT <= 0) {
+        S.fwT = .18;
+        const cols = [0xffc94a, 0x5fe0b5, 0xff6a5c, 0x8fa0ff, 0xffffff];
+        burst(new T.Vector3(S.x + rand(-6, 6), SLEIGH_Y + rand(1.5, 6), rand(-14, -3)), cols[Math.floor(Math.random() * cols.length)], 46, 7, 1);
+        if (Math.random() < .35) sfx.star();
+      }
+      if (S.celT > 1.2 && !S.snap) S.wantSnap = true;
+      if (S.celT > 4.2) { $("celebrate").hidden = true; showEnd(); }
+    }
     const dz = S.speed * dt;
     S.cool = Math.max(0, S.cool - dt); S.inv = Math.max(0, S.inv - dt); S.shake = Math.max(0, S.shake - dt);
 
@@ -640,6 +667,7 @@
     rig.position.set(S.x, SLEIGH_Y + Math.sin(tt * 2.2) * .15, 0);
     rig.rotation.z = -S.vx * .045; rig.rotation.y = -S.vx * .03;
     rig.visible = !(S.inv > 0 && playing && Math.floor(S.inv * 12) % 2 === 0) && S.mode !== "end";
+    if (S.mode === "celebrate") { rig.visible = true; rig.position.y = SLEIGH_Y + Math.sin(tt * 3) * .5; rig.rotation.z = Math.sin(tt * 2) * .15; }
     sleighLight.position.set(S.x, SLEIGH_Y + 1, 1);
     sleigh.userData.hat.rotation.z = Math.sin(tt * 9) * .2;
     for (const d of deer) {
@@ -695,9 +723,7 @@
         o.g.rotation.y += dt * 2.4;
         if (playing && pz < 0 && z >= 0 && Math.abs(o.x - S.x) < 1.1) {
           o.dead = true; scene.remove(o.g);
-          S.score += 100; S.stars++; burst(o.g.position, 0xffc94a, 44, 7); popNum(o.g.position, "+100", "#ffc94a"); sfx.star(); buildPips();
-          const idx = HINT_STARS.indexOf(S.stars);
-          if (idx >= 0) { renderHints(S.stars, idx); toast(`Hint ${idx + 1} ontgrendeld`); setTimeout(sfx.hint, 120); }
+          S.score += 100; S.stars++; burst(o.g.position, 0xffc94a, 44, 7); popNum(o.g.position, "+100", "#ffc94a"); sfx.star();
           renderBoard(S.score);
         }
       } else if (o.k === "sponsor") {
@@ -729,7 +755,7 @@
         }
       }
       if (!p.done && y < 1.3) {
-        p.done = true; S.combo = 0; setCombo();
+        p.done = true; S.combo = 0; setCombo(); buildPips();
         burst(p.g.position, 0xeef0ff, 14, 3, 2); popNum(p.g.position, "mis", "#b3a8d6"); sfx.miss();
       }
       if (p.done) scene.remove(p.g);
@@ -776,6 +802,11 @@
     camera.position.set(S.x * .55, 12.6, 13.5);
     if (S.shake > 0) { camera.position.x += (Math.random() - .5) * S.shake; camera.position.y += (Math.random() - .5) * S.shake; }
     camera.lookAt(S.x * .7, 3.2, -9);
+    if (S.mode === "celebrate") {
+      const a = -.9 + S.celT * .45;
+      camera.position.set(S.x + Math.sin(a) * 9, 9 - Math.min(1, S.celT) * 1.5, Math.cos(a) * 9 + 1);
+      camera.lookAt(S.x, SLEIGH_Y + .5, -1.5);
+    }
     renderer.toneMappingExposure = S.mode === "landing" ? 1.05 + (S.stuck ? -Math.min(1, S.endT) * .8 : Math.min(1, S.endT) * 1.6) : 1.05;
   }
 
@@ -783,7 +814,11 @@
   const hud = $("hud"), livesEl = $("lives"), scoreEl = $("score"), timerBar = $("timerbar"), pipsEl = $("pips"), depthEl = $("depth"), dropBtn = $("dropBtn");
   const hatSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c2-8 7-13 15-13-2 3-2 7-1 13z" fill="#e8332a"/><rect x="2" y="16.5" width="17" height="4.5" rx="2.2" fill="#f6f1ff"/><circle cx="18.5" cy="5" r="2.6" fill="#f6f1ff"/></svg>';
   function buildLives() { livesEl.innerHTML = [0, 1, 2].map(i => hatSvg.replace("<svg", `<svg class="${i < S.lives ? "" : "lost"}"`)).join(""); livesEl.setAttribute("aria-label", `${Math.max(0, S.lives)} mutsen over`); }
-  function buildPips() { pipsEl.innerHTML = Array.from({ length: 6 }, (_, i) => `<span class="${i < S.stars ? "on" : ""} ${i % 2 ? "gap" : ""}"></span>`).join(""); }
+  function buildPips() {
+    const got = store.get("hint_d" + TODAY, false);
+    pipsEl.innerHTML = got ? '<em>Hint van vandaag ✓</em>' :
+      '<em>Reeks</em>' + Array.from({ length: STREAK_FOR_HINT }, (_, i) => `<span class="${i < S.combo ? "on" : ""}"></span>`).join("") + '<em class="tg">hint</em>';
+  }
   let lastScore = -1, lastDel = -1;
   function syncHud() {
     if (S.score !== lastScore) { scoreEl.textContent = S.score.toLocaleString("nl-BE"); lastScore = S.score; }
@@ -810,29 +845,44 @@
     dropBtn.classList.toggle("ready", ready);
   }, 60);
   $("startBtn").addEventListener("click", start);
+  // new personal day record: a short fly-around with fireworks, recorded as the "highscore video"
+  function startCelebrate(prev) {
+    S.mode = "celebrate"; S.celT = 0; S.fwT = 0; S.celebrated = true; S.prevBest = prev;
+    hud.hidden = true; pipsEl.hidden = true; depthEl.hidden = true; dropBtn.hidden = true; comboEl.classList.remove("on");
+    const c = $("celebrate");
+    c.querySelector("[data-score]").textContent = S.score.toLocaleString("nl-BE");
+    c.querySelector("[data-prev]").textContent = prev ? `Vorig record vandaag: ${prev.toLocaleString("nl-BE")}` : "Je eerste score van vandaag";
+    c.hidden = false; sfx.land();
+  }
   function showEnd() {
     S.mode = "end"; hud.hidden = true; pipsEl.hidden = true; depthEl.hidden = true; dropBtn.hidden = true; comboEl.classList.remove("on");
     for (const p of S.falling) scene.remove(p.g); S.falling = [];
-    store.set("best", Math.max(store.get("best", 0), S.score));
-    const rank = boardRows(S.score).findIndex(r => r.me) + 1;
-    const opened = HINTS.map((h, i) => S.stars >= HINT_STARS[i]), nOpen = opened.filter(Boolean).length;
+    const prevDay = store.get("best_d" + TODAY, 0), isRecord = S.celebrated;
+    store.set("best_d" + TODAY, Math.max(prevDay, S.score));
+    const rankToday = boardRows("today", 0).findIndex(r => r.me) + 1;
+    const hintOpen = store.get("hint_d" + TODAY, false);
     const acc = S.drops ? Math.round(S.delivered / S.drops * 100) : 0;
-    const names = ["Hint van de dag", "Bonushint", "Bonushint"];
+    boardKind = "today";
     endEl.innerHTML = `
       <div class="end-grid">
         <section class="end-col">
-          <p class="io-label">${S.stuck ? "Vastgelopen tegen een toren" : "Route afgewerkt"} · adventsdag 12</p>
-          <h2 class="io-title">${S.score.toLocaleString("nl-BE")} punten</h2>
-          <p class="io-text">Je staat <b>${rank}e</b> van 8 bij Familie Peeters. ${nOpen ? `Je speelde <b>${nOpen} van 3</b> hints vrij.` : "Geen hints vandaag: vang minstens 2 sterren."}</p>
+          <p class="io-label">${S.stuck ? "Vastgelopen tegen een toren" : "Route afgewerkt"} · adventsdag ${TODAY}</p>
+          <h2 class="io-title">${S.score.toLocaleString("nl-BE")} punten${isRecord ? ' <span class="rec">Dagrecord</span>' : ""}</h2>
+          <p class="io-text">Je staat <b>${rankToday}e</b> van 8 in de dagstand van Familie Peeters. ${hintOpen ? (S.hintNow ? "Je haalde een reeks van " + STREAK_FOR_HINT + " en speelde de hint van vandaag vrij." : "De hint van vandaag had je al.") : "Geen hint vandaag: bezorg " + STREAK_FOR_HINT + " pakjes op rij."}</p>
           <div class="io-stats">
             <div><b>${S.delivered}</b><span>bezorgd</span></div>
             <div><b>${acc}%</b><span>raak</span></div>
+            <div><b>${S.best}</b><span>langste reeks</span></div>
             <div><b>${S.stars}</b><span>sterren</span></div>
-            <div><b>x${Math.min(5, 1 + Math.floor(S.best / 2))}</b><span>beste combo</span></div>
           </div>
-          <h3 class="io-h3">Jouw hints van vandaag</h3>
-          <div class="cards" id="cards">
-            ${HINTS.map((h, i) => `<div class="fc ${opened[i] ? "earned" : "locked"}" data-i="${i}"><div class="fc-in"><div class="fc-front"><span>${names[i]}</span><b>${HINT_STARS[i]}★</b></div><div class="fc-back"><span>${names[i]}</span><p>${opened[i] ? h : `Vang ${HINT_STARS[i]} sterren om deze hint te openen.`}</p></div></div></div>`).join("")}
+          ${isRecord ? `<div class="hsvideo">
+            <div class="hsv-thumb">${S.snap ? `<img src="${S.snap}" alt="Stilstaand beeld uit je highscore-video">` : ""}<span class="hsv-play" aria-hidden="true">▶</span><span class="hsv-len">0:04</span></div>
+            <div class="hsv-txt"><b>Je highscore-video staat klaar</b><span>Een korte clip van je dagrecord om te delen in de groepschat.</span>
+              <div class="hsv-act"><button class="io-btn light" id="replayBtn" type="button">Bekijk opnieuw</button><button class="io-btn blue" id="shareVid" type="button">Deel video</button></div></div>
+          </div>` : ""}
+          <h3 class="io-h3">Hint van vandaag</h3>
+          <div class="cards one" id="cards">
+            <div class="fc ${hintOpen ? "earned" : "locked"}"><div class="fc-in"><div class="fc-front"><span>Adventsdag ${TODAY}</span><b>${hintOpen ? "Open me" : "Reeks van " + STREAK_FOR_HINT}</b></div><div class="fc-back"><span>Hint van je Santa</span><p>${hintOpen ? TODAY_HINT : "Bezorg " + STREAK_FOR_HINT + " pakjes op rij zonder te missen om de hint van vandaag te openen. Je kan het opnieuw proberen."}</p>${hintOpen ? '<small>Let op: hints mogen een vals spoor zijn.</small>' : ""}</div></div></div>
           </div>
           <details class="pastbox"><summary>Hints van eerdere dagen</summary><ul class="past" id="past"></ul><button class="more" id="moreBtn" type="button">Toon alle 11 dagen</button></details>
         </section>
@@ -846,19 +896,29 @@
             <div class="points"><span>Juist op het feest: <b>+100</b></span><span>Per dag eerder juist: <b>+50</b></span></div>
           </div>
           <div class="io-card">
-            <h3 class="io-h3">Klassement Familie Peeters</h3>
+            <div class="lb-head"><h3 class="io-h3">Highscores Familie Peeters</h3>
+              <div class="tabs" role="tablist"><button type="button" role="tab" data-kind="today" aria-selected="true">Vandaag</button><button type="button" role="tab" data-kind="total" aria-selected="false">Totaal</button></div></div>
             <ol class="lb" id="lb"></ol>
+            <p class="io-small lb-note" id="lbNote">Beste score van vandaag. Je mag vaker vliegen, alleen je beste telt.</p>
           </div>
           <div class="io-actions">
             ${extraUsed ? `<button class="io-btn" id="againBtn" type="button">Vlieg opnieuw (demo)</button>` : `<button class="io-btn blue" id="adBtn" type="button">Extra vlucht via sponsorvideo</button>`}
             <button class="io-btn light" id="shareBtn" type="button">Deel je score</button>
             ${extraUsed ? "" : `<button class="io-link" id="againLink" type="button">Gewoon opnieuw (demo)</button>`}
           </div>
-          <p class="io-small">Morgen opent adventsdag 13 met een nieuwe route en nieuwe hints. <a class="io-link" href="index.html">Terug naar de homepage</a></p>
+          <p class="io-small">Morgen opent adventsdag ${TODAY + 1} met een nieuwe route en een nieuwe hint. <a class="io-link" href="index.html">Terug naar de homepage</a></p>
         </section>
       </div>`;
     endEl.hidden = false; endEl.scrollTop = 0;
-    renderBoard(S.score); renderGuess(); showAll = false; renderPast();
+    renderBoard(0); renderGuess(); showAll = false; renderPast();
+    endEl.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => {
+      boardKind = b.dataset.kind;
+      endEl.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+      $("lbNote").textContent = boardKind === "today" ? "Beste score van vandaag. Je mag vaker vliegen, alleen je beste telt." : "Som van je dagrecords over alle adventsdagen tot nu.";
+      renderBoard(0);
+    }));
+    $("replayBtn")?.addEventListener("click", () => { endEl.hidden = true; S.celebrated = false; startCelebrate(S.prevBest || 0); });
+    $("shareVid")?.addEventListener("click", e => { e.target.textContent = "Demo: video wordt gedeeld"; setTimeout(() => e.target.textContent = "Deel video", 2000); });
     // flip the hint cards one by one
     endEl.querySelectorAll(".fc").forEach((c, i) => setTimeout(() => { c.classList.add("flipped"); if (c.classList.contains("earned")) sfx.star(); }, 700 + i * 650));
     endEl.querySelectorAll(".fc").forEach(c => c.addEventListener("click", () => c.classList.toggle("flipped")));
@@ -923,7 +983,11 @@
   document.addEventListener("visibilitychange", () => { paused = document.hidden; last = performance.now(); keys.l = keys.r = 0; });
   function frame(now) {
     const dt = Math.min(.033, (now - last) / 1000); last = now;
-    if (!paused) { update(dt, now); renderer.render(scene, camera); if (S.mode === "play") syncHud(); }
+    if (!paused) {
+      update(dt, now); renderer.render(scene, camera);
+      if (S.wantSnap) { S.wantSnap = false; try { S.snap = cv.toDataURL("image/jpeg", .82); } catch (e) {} }
+      if (S.mode === "play") syncHud();
+    }
     requestAnimationFrame(frame);
   }
   window.__sl = S;
