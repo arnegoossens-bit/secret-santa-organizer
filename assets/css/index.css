@@ -126,7 +126,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .chips span{border:1px solid var(--line);border-radius:100px;padding:3px 10px;font-weight:600;font-size:13px}
 .chips span.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 @media (max-width:980px){.gband{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:560px){.float.hint{left:-6px}.float.guess{right:-6px}.steps{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.visual{overflow-x:clip}.phone{margin:0 auto}.float{max-width:180px}.float.hint{left:0}.float.guess{right:0}.steps{grid-template-columns:minmax(0,1fr)}}
 
 /* How */
 .how{padding-bottom:clamp(80px,9vw,128px)}

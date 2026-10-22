@@ -73,7 +73,7 @@
       }
       if (phone) {
         const r = phone.getBoundingClientRect(), c = (r.top + r.height / 2 - vh2 / 2) / vh2;
-        phone.style.transform = `translateY(${c * -50}px) rotate(${c * -3}deg)`;
+        phone.style.transform = innerWidth < 600 ? `translateY(${c * -24}px)` : `translateY(${c * -50}px) rotate(${c * -3}deg)`;
         floats.forEach((f, i) => f.style.translate = `0 ${c * (i ? 70 : -60)}px`);
       }
       if (fband) {
