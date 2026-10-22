@@ -67,3 +67,4 @@
 .sso-flakes i{position:absolute;top:-12px;border-radius:50%;background:#EDEDF3;animation:sso-fall linear infinite}
 @keyframes sso-fall{to{transform:translate3d(var(--dx,20px),110vh,0)}}
 @media (prefers-reduced-motion:reduce){.sso-flakes{display:none}.sso-art .sso-deer,.sso-art .sso-santa{animation:none}}
+@media (max-width:520px){.sso-hdr .sso-actions .sso-btn.light{display:none}.sso-hdr .sso-actions{max-width:58%}.sso-hdr .sso-actions .sso-btn{white-space:normal;text-align:center}}
