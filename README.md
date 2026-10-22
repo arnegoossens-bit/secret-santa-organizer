@@ -1,8 +1,8 @@
 # Secret Santa Organizer, Kerst 2026 (prototype)
 
-Speelbaar prototype van de vernieuwde Secret Santa Organizer in iO-stijl.
+Speelbaar prototype van de vernieuwde Secret Santa Organizer in de stijl van secretsantaorganizer.com.
 
-- `index.html`: homepage met 3D-hero en scrollanimaties (code in `assets/`)
+- `index.html`: homepage met sneeuwhero en scrollanimaties (code in `assets/`)
 - `feestje-aanmaken.html`: aanmaakflow in drie stappen
 - `sleeroute.html`: Santa's Sleeroute, het adventsspel in three.js
 - `deelnemer.html`: deelnemerspagina met je getrokken naam, verlanglijsten, highscores en wie er meedoet

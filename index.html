@@ -7,66 +7,38 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/sso.css">
 <link rel="stylesheet" href="assets/css/index.css">
 </head>
 <body>
-<header class="hdr" id="hdr">
-  <div class="wrap">
-    <a class="logo" href="#top" aria-label="Secret Santa Organizer, naar boven">
-      <svg viewBox="0 0 40 40" aria-hidden="true">
-        <g class="peek">
-          <g class="mitt"><circle cx="33.5" cy="15" r="2.7" fill="#2f8f5b"/><rect x="31.2" y="16.6" width="4.6" height="1.8" rx=".9" fill="#ffffff"/></g>
-          <circle cx="20" cy="15" r="5.6" fill="#ffcfae"/>
-          <ellipse cx="20" cy="19.2" rx="6.4" ry="4.8" fill="#ffffff"/>
-          <ellipse cx="17.6" cy="17.4" rx="2.2" ry="1.1" fill="#ffffff"/><ellipse cx="22.4" cy="17.4" rx="2.2" ry="1.1" fill="#ffffff"/>
-          <g class="eyes"><circle cx="18" cy="14.3" r=".8" fill="#242424"/><circle cx="22" cy="14.3" r=".8" fill="#242424"/></g>
-          <circle cx="20" cy="16" r="1.1" fill="#f08f78"/>
-          <circle cx="16.6" cy="16.2" r="1" fill="#ff9d8c" opacity=".7"/><circle cx="23.4" cy="16.2" r="1" fill="#ff9d8c" opacity=".7"/>
-          <path d="M14.4 10.2C14.8 4 19.6 .6 26.2 1.4c-2 2-2.2 5.2-.8 8.8z" fill="#d42a20"/>
-          <rect x="13.2" y="8.6" width="13.6" height="3.2" rx="1.6" fill="#ffffff"/>
-          <circle cx="26.6" cy="1.8" r="2.3" fill="#ffffff"/>
-        </g>
-        <rect x="6" y="14" width="28" height="24" rx="4" fill="#8a3b2e"/><rect x="3" y="10" width="34" height="7" rx="3" fill="#a9493a"/><path d="M12 26h7M22 26h7M8 32h7M18 32h7M28 32h4M8 20h4M15 20h7M25 20h7" stroke="#6a2b22" stroke-width="1.6"/>
-      </svg>
-      Secret Santa
-    </a>
-    <nav class="nav" aria-label="Hoofdmenu">
-      <a href="#hoe">Hoe werkt het</a>
-      <a href="#spel">Sleeroute</a>
-      <a href="#merken">Voor merken</a>
-      <a href="#faq">Vragen</a>
-    </nav>
-    <div class="hdr-actions">
-      <button class="lang" type="button" aria-label="Taal kiezen, nu Nederlands">NL</button>
-      <a class="pill" href="feestje-aanmaken.html">Maak je feestje aan</a>
-      <a class="circle" href="sleeroute.html" aria-label="Speel Santa's Sleeroute"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></a>
-    </div>
-  </div>
-</header>
-
 <main id="top">
   <section class="hero">
-    <div class="wrap">
-      <div class="frame" id="frame">
-        <canvas id="scene" aria-hidden="true"></canvas>
-        <div class="hero-copy">
-          <a class="tag" href="#spel"><i></i>Nieuw voor Kerst 2026: Santa's Sleeroute</a>
-          <h1 class="h1">Trek de <a href="#hoe">namen</a>, maak je <a href="#troeven">verlanglijst</a> en raad wie jou trok.</h1>
-          <p class="hero-sub">Gratis Secret Santa met uitsluitingen en uitnodigingen per mail. Dit jaar bezorg je elke dag in december pakjes per slee en speel je hints vrij over je eigen Santa.</p>
-          <div class="cta-card" id="start">
-            <p>Je feestje staat klaar in twee minuten.</p>
-            <div class="row">
-              <a class="pill white" href="feestje-aanmaken.html">Maak je feestje aan</a>
-              <a class="pill outline" href="sleeroute.html">Speel de demo</a>
-            </div>
-            <ul class="checks">
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Geen account</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>17 talen</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Altijd gratis</li>
-            </ul>
-          </div>
+    <div class="hero-teal sso-hdr" aria-hidden="true"></div>
+    <div class="hero-in">
+      <div class="hero-top">
+        <a class="sso-logo" href="#top" aria-label="Secret Santa Organizer, naar boven"><img src="assets/img/sso/secret-santa-logo.png" alt="Secret Santa" width="165" height="70"></a>
+        <div class="acts">
+          <a class="pill sm-pill" href="feestje-aanmaken.html">Maak je feestje aan</a>
+          <button class="lang" type="button" aria-label="Taal kiezen, nu Nederlands">Nederlands<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
         </div>
+      </div>
+      <div class="hero-stage">
+        <div class="hero-card">
+          <a class="tag" href="#spel"><i></i>Nieuw voor Kerst 2026: Santa's Sleeroute</a>
+          <h1 class="h1">Je Secret Santa, geregeld in 3 stappen. En dit jaar raad je <a href="#spel">wie jou trok</a>.</h1>
+          <p class="hero-sub">Organiseer een feestje met vrienden, familie of collega's. Trek de namen online, laat iedereen een verlanglijst maken, sluit koppels uit en verstuur de uitnodigingen per mail. Geen account nodig. Je hebt minstens 3 personen nodig.</p>
+          <div class="row">
+            <a class="pill" href="feestje-aanmaken.html">Maak je feestje aan<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <a class="pill light" href="sleeroute.html">Speel de demo</a>
+          </div>
+          <ul class="checks">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Geen account</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>17 talen</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Altijd gratis</li>
+          </ul>
+        </div>
+        <div class="hero-art" aria-hidden="true"><img class="h-chim" src="assets/img/sso/chimney.webp" alt=""><img class="h-deer" src="assets/img/sso/reindeer.png" alt=""><img class="h-santa" src="assets/img/sso/santa.png" alt=""></div>
       </div>
     </div>
   </section>
@@ -91,21 +63,25 @@
       </div>
       <div class="grid">
         <a class="pcard c5" href="#hoe">
+          <span class="ico"><img src="assets/img/sso/group-add.svg" alt=""></span>
           <h3>Namen trekken</h3>
           <p>Plak een lijst van 3 of 300 namen. Iedereen krijgt privé zijn getrokken naam, niemand trekt zichzelf.</p>
           <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </a>
         <a class="pcard c7" href="#troeven">
+          <span class="ico"><img src="assets/img/sso/list-sparkle.svg" alt=""></span>
           <h3>Verlanglijstjes en cadeauzoeker</h3>
           <p>Eén verlanglijst die meereist naar al je feesten. Cadeaus afvinken kan, zodat niemand twee keer hetzelfde koopt. Geen inspiratie? De cadeauzoeker kijkt naar interesses en budget.</p>
           <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </a>
         <a class="pcard c7" href="#faq">
+          <span class="ico"><img src="assets/img/sso/exclusion.svg" alt=""></span>
           <h3>Uitsluitingen en groepen hergebruiken</h3>
           <p>Partners, broers en zussen of vaste duo's trekken elkaar niet. Vorig jaar al gespeeld? Importeer je oude groep in één klik.</p>
           <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
         </a>
         <a class="pcard c5" href="#spel">
+          <span class="ico"><img src="assets/img/sso/gift-icon.svg" alt=""></span>
           <h3>Santa's Sleeroute</h3>
           <p>Het nieuwe adventsspel: bezorg pakjes per slee, speel hints vrij en raad wie jou trok.</p>
           <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -150,9 +126,9 @@
         <p class="lead" style="max-width:28em">Je hebt minstens 3 deelnemers nodig. Iedereen krijgt een privé-mail met de getrokken naam en een link naar het verlanglijstje.</p>
       </div>
       <ol class="how-steps">
-        <li><span class="n">1</span><h3>Voeg deelnemers toe</h3><p>Typ de namen of plak een hele lijst in één keer. Of importeer je groep van vorig jaar.</p></li>
-        <li><span class="n">2</span><h3>Stel je feest in</h3><p>Budget, datum en uitsluitingen. Zet Santa's Sleeroute aan of uit voor je groep.</p></li>
-        <li><span class="n">3</span><h3>Nodig iedereen uit</h3><p>Deel een link of verstuur de uitnodigingen per mail. Wij trekken de namen en bewaren het geheim.</p></li>
+        <li><span class="n"><img src="assets/img/sso/group-add.svg" alt="Stap 1"></span><h3>Voeg deelnemers toe</h3><p>Typ de namen of plak een hele lijst in één keer. Of importeer je groep van vorig jaar.</p></li>
+        <li><span class="n"><img src="assets/img/sso/party-settings.svg" alt="Stap 2"></span><h3>Stel je feest in</h3><p>Budget, datum en uitsluitingen. Zet Santa's Sleeroute aan of uit voor je groep.</p></li>
+        <li><span class="n"><img src="assets/img/sso/mail-invite.svg" alt="Stap 3"></span><h3>Nodig iedereen uit</h3><p>Deel een link of verstuur de uitnodigingen per mail. Wij trekken de namen en bewaren het geheim.</p></li>
       </ol>
     </div>
   </section>
@@ -211,24 +187,17 @@
   </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="fgrid">
-      <div>
-        <a class="logo" href="#top">Secret Santa</a>
-        <p style="margin:12px 0 0;max-width:22em">Gratis namen trekken voor families, klassen en kantoren. Ook voor Belgische en Nederlandse kerstgroepen.</p>
-      </div>
-      <div><h4>Tips</h4><ul><li><a href="#">Hoe organiseer je het</a></li><li><a href="#">Top 10 cadeau-ideeën</a></li><li><a href="#">Top 10 per budget</a></li><li><a href="#">Eco-vriendelijk feest</a></li></ul></div>
-      <div><h4>Variaties</h4><ul><li><a href="#">Lootjes trekken</a></li><li><a href="#">Secret Santa op het werk</a></li><li><a href="#">Virtuele Secret Santa</a></li><li><a href="#">White Elephant</a></li></ul></div>
-      <div><h4>Over ons</h4><ul><li><a href="#merken">Adverteren</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy</a></li><li><a href="#">Cookies</a></li></ul></div>
-    </div>
-    <div class="langs" aria-label="Talen">
-      <span>Čeština</span><span>Dansk</span><span>Deutsch</span><span>English</span><span>Español</span><span>Filipino</span><span>Français</span><span>Italiano</span><span>Magyar</span><b>Nederlands</b><span>Norsk</span><span>Polski</span><span>Português</span><span>Română</span><span>Suomi</span><span>Svenska</span><span>Ελληνικά</span>
-    </div>
+<footer class="sso-ftr">
+  <div class="sso-in">
+    <div class="brand"><a class="sso-logo" href="index.html"><img src="assets/img/sso/secret-santa-logo.png" alt="Secret Santa" width="132" height="56"></a><a class="sso-btn" href="index.html#faq">Veelgestelde vragen</a></div>
+    <div><h3>Lees onze tips</h3><ul><li><a href="index.html#hoe">Zo organiseer je het</a></li><li><a href="index.html#troeven">Cadeau-ideeën</a></li><li><a href="index.html#faq">Budget en regels</a></li></ul></div>
+    <div><h3>Santa's Sleeroute</h3><ul><li><a href="sleeroute.html">Speel de demo</a></li><li><a href="deelnemer.html#feestje">Highscores</a></li><li><a href="index.html#merken">Voor merken</a></li></ul></div>
+    <div><h3>Je feestje</h3><ul><li><a href="feestje-aanmaken.html">Maak een feestje aan</a></li><li><a href="deelnemer.html">Mijn Secret Santa</a></li><li><a href="beheer.html">Beheer je feestje</a></li></ul></div>
+    <div class="legal"><span>Secret Santa Organizer · prototype Kerst 2026</span><span>Voorbeelddata, er wordt niets verstuurd</span></div>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script src="assets/js/sso.js"></script>
 <script src="assets/js/index.js"></script>
 </body>
 </html>

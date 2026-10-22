@@ -30,7 +30,7 @@
       const st = [
         p.opened ? '<span class="chip ok"><i></i>Geopend</span>' : '<span class="chip warn"><i></i>Niet geopend</span>',
         p.wishlist.length ? `<span class="chip">${p.wishlist.length} ${p.wishlist.length === 1 ? "wens" : "wensen"}</span>` : '<span class="chip">Geen lijst</span>',
-        t ? `<span class="chip blue">${nf(t)} vandaag</span>` : ""
+        t ? `<span class="chip teal">${nf(t)} vandaag</span>` : ""
       ].join("");
       return `<div class="prow" role="listitem" data-id="${p.id}">${avatar(p)}
         <span class="nm"><b>${esc(p.name)}${p.host ? " · organisator" : ""}</b><span>${esc(p.email)}</span></span>

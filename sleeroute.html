@@ -7,19 +7,16 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Manrope:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&family=Grandstander:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/sso.css">
 <link rel="stylesheet" href="assets/css/sleeroute.css">
 </head>
 <body>
-<header class="top">
-  <a class="brand" href="index.html" aria-label="Naar de Secret Santa homepage">
-    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="14" width="28" height="24" rx="4" fill="#8a3b2e"/><rect x="3" y="10" width="34" height="7" rx="3" fill="#a9493a"/><path d="M12 26h7M22 26h7M8 32h7M18 32h7M28 32h4M8 20h4M15 20h7M25 20h7" stroke="#6a2b22" stroke-width="1.6"/><path d="M14 10c0-6 6-9 12-7-3 1-4 4-3 7z" fill="#d42a20"/><circle cx="27" cy="3.6" r="2.6" fill="#ffffff" stroke="#e5e5e5"/></svg>
-    <span class="brand-name">Secret Santa</span>
-    <span class="brand-sub">Santa's Sleeroute</span>
-  </a>
-  <div class="top-actions">
-    <span class="proto">Prototype · voorbeelddata</span>
-    <a class="toplink" href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>Terug naar de homepage</a>
+<header class="sso-hdr">
+  <div class="sso-in">
+    <a class="sso-logo" href="index.html" aria-label="Naar de Secret Santa homepage"><img src="assets/img/sso/secret-santa-logo.png" alt="Secret Santa" width="165" height="70"></a>
+    <div class="sso-art" aria-hidden="true"><img class="sso-chim" src="assets/img/sso/chimney.webp" alt=""><img class="sso-deer" src="assets/img/sso/reindeer.png" alt=""><img class="sso-santa" src="assets/img/sso/santa.png" alt=""></div>
+    <div class="sso-actions"><a class="sso-btn light sm" href="deelnemer.html#feestje">Highscores en verlanglijsten</a><a class="sso-btn sm" href="index.html">Terug naar de homepage</a></div>
   </div>
 </header>
 
@@ -67,7 +64,7 @@
             <div class="io-slots"><span>Hint van vandaag · reeks van 5</span><span>Dagrecord en totaalstand</span><span>Je gok van de dag</span></div>
           </div>
           <div class="io-actions">
-            <button class="io-btn" id="startBtn" type="button">Start de vlucht</button>
+            <button class="io-btn blue" id="startBtn" type="button">Start de vlucht</button>
             <span class="io-sp"><i>JM</i>Vandaag aangeboden door <b>Jouw Merk Hier</b></span>
           </div>
         </div>
@@ -91,7 +88,18 @@
 
 </main>
 
+<footer class="sso-ftr">
+  <div class="sso-in">
+    <div class="brand"><a class="sso-logo" href="index.html"><img src="assets/img/sso/secret-santa-logo.png" alt="Secret Santa" width="132" height="56"></a><a class="sso-btn" href="index.html#faq">Veelgestelde vragen</a></div>
+    <div><h3>Lees onze tips</h3><ul><li><a href="index.html#hoe">Zo organiseer je het</a></li><li><a href="index.html#troeven">Cadeau-ideeën</a></li><li><a href="index.html#faq">Budget en regels</a></li></ul></div>
+    <div><h3>Santa's Sleeroute</h3><ul><li><a href="sleeroute.html">Speel de demo</a></li><li><a href="deelnemer.html#feestje">Highscores</a></li><li><a href="index.html#merken">Voor merken</a></li></ul></div>
+    <div><h3>Je feestje</h3><ul><li><a href="feestje-aanmaken.html">Maak een feestje aan</a></li><li><a href="deelnemer.html">Mijn Secret Santa</a></li><li><a href="beheer.html">Beheer je feestje</a></li></ul></div>
+    <div class="legal"><span>Secret Santa Organizer · prototype Kerst 2026</span><span>Voorbeelddata, er wordt niets verstuurd</span></div>
+  </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script src="assets/js/sso.js"></script>
 <script src="assets/js/sleeroute.js"></script>
 </body>
 </html>

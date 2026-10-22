@@ -5,7 +5,7 @@
   /* ---- motion layer ---- */
   const reduceM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const logo = document.querySelector(".hdr .logo");
-  if (!reduceM) { setTimeout(() => { logo.classList.add("peeking"); setTimeout(() => logo.classList.remove("peeking"), 1900); }, 1200); }
+  if (!reduceM && logo) { setTimeout(() => { logo.classList.add("peeking"); setTimeout(() => logo.classList.remove("peeking"), 1900); }, 1200); }
   if (!reduceM && "IntersectionObserver" in window) {
     // staggered reveals for everything below the first screen
     const groups = [".statement .label", ".fact", ".pillars-head", ".pcard", ".gband > div:first-child > *", ".visual", ".how-head", ".how-steps li", ".bleft > *", ".fmt", ".quotes .label", ".quotes .h2", ".q", ".faq .wrap > div:first-child", ".faq details", ".fband", ".fgrid > div"];
@@ -61,11 +61,13 @@
       ticking = false;
       const vh2 = window.innerHeight, y = window.scrollY;
       // hero: frame eases back, copy drifts up, 3D camera pulls out
-      const hp = Math.min(1, y / (frame.offsetHeight || 1));
-      frame.style.transform = `scale(${1 - hp * .06})`;
-      frame.style.borderRadius = `${28 + hp * 24}px`;
-      if (heroCopy) heroCopy.style.transform = `translateY(${-hp * 60}px)`;
-      window.__hs = hp;
+      if (frame) {
+        const hp = Math.min(1, y / (frame.offsetHeight || 1));
+        frame.style.transform = `scale(${1 - hp * .06})`;
+        frame.style.borderRadius = `${28 + hp * 24}px`;
+        if (heroCopy) heroCopy.style.transform = `translateY(${-hp * 60}px)`;
+        window.__hs = hp;
+      }
       if (big && words.length) {
         const r = big.getBoundingClientRect(), p = Math.min(1, Math.max(0, (vh2 * .85 - r.top) / (r.height + vh2 * .35)));
         const n = Math.round(p * words.length);
@@ -85,12 +87,11 @@
     window.addEventListener("resize", onS); onS();
   }
   const hdr = document.getElementById("hdr");
-  const onScroll = () => hdr.classList.toggle("scrolled", window.scrollY > 8);
-  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  if (hdr) { const onScroll = () => hdr.classList.toggle("scrolled", window.scrollY > 8); window.addEventListener("scroll", onScroll, { passive: true }); onScroll(); }
 
   const T = window.THREE;
   const frame = document.getElementById("frame"), cv = document.getElementById("scene");
-  if (!T) return;
+  if (!T || !cv || !frame) return; // de 3D-hero is vervangen door de SSO-hero; deze code blijft voor als hij terugkomt
   let renderer;
   try { renderer = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true }); } catch (e) { return; }
   if (T.ColorManagement) T.ColorManagement.legacyMode = false;

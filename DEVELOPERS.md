@@ -28,21 +28,29 @@ python3 -m http.server 8000
 ```
 
 Externe afhankelijkheden (via CDN):
-- three.js `0.149.0` (jsDelivr) voor de 3D-hero op de homepage en de game
-- Manrope (Google Fonts)
+- three.js `0.149.0` (jsDelivr) voor de game
+- Grandstander en Open Sans (Google Fonts), dezelfde fonts als secretsantaorganizer.com
 
-## Huisstijl (iO)
+## Huisstijl (Secret Santa Organizer)
+
+Alle pagina's volgen de stijl van de huidige secretsantaorganizer.com (gemeten op de beheer- en deelnemerspagina). Tokens, header, footer en knoppen staan in `assets/css/sso.css`; de sneeuw in `assets/js/sso.js`.
 
 | Token | Waarde |
 |---|---|
-| Font | Manrope 500 (body), 600 (titels in kaarten) |
-| Tekst | `#232323` |
-| Accent | `#0000D2` (iO-blauw) |
-| Zachte achtergrond | `#F2E9E4` (blush) |
-| Kaarten | wit, radius 24px |
-| Knoppen | pill (radius 100px), zwart of iO-blauw |
+| Koppen | Grandstander 400 (getrokken naam 700, rood) |
+| Tekst | Open Sans 400/600/700, `#2A2A2A` |
+| Primair (hoofdknoppen) | rood `#E7000B` |
+| Rode titels, banden | `#B52B26` |
+| Secundair (knoppen, tabs) | donker teal `#075753` |
+| Accent, footer, randen inputs | teal `#4EB1AB` (header `#51B1AB` met `header-bg.png`) |
+| Lichte rand rijen, chips | `#D8F0EF` |
+| Panelen | `#F5F5F5`, radius 16px, padding 24px |
+| Rijen | wit, 1px `#D8F0EF`, radius 12px |
+| Knoppen | pill, padding 8px 20px, 16px/700, rand 2px |
+| Inputs | pill, 1px `#4EB1AB` |
+| Chips | 12px, padding 2px 10px; groen `#DCFCE7`/`#016630`, teal `#D8F0EF`/`#003D39` |
 
-De tokens staan als CSS custom properties bovenaan elk CSS-bestand.
+Illustraties (logo, schoorsteen, rendier, kerstman, iconen) komen van de huidige site en staan in `assets/img/sso/`. Rendier en kerstman zijn PNG-renders van de inline SVG's van de site; in productie kan je de originele SVG-componenten hergebruiken.
 
 ## Santa's Sleeroute (`assets/js/sleeroute.js`)
 

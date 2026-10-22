@@ -6,8 +6,8 @@
 
   // header + intro
   $("partyLabel").textContent = D.party.name;
-  $("hello").textContent = `Hoi ${I.name}, nog ${days} ${days === 1 ? "dag" : "dagen"} tot het feest.`;
-  $("manageLink").hidden = !I.host;
+  $("greet").textContent = `Hoi ${I.name},`;
+  $("manageLink").hidden = $("manageLink2").hidden = !I.host;
 
   // view tabs, deep-linkable with #feestje
   const views = [...document.querySelectorAll(".view")];
@@ -27,7 +27,7 @@
   }
   $("revealBtn").addEventListener("click", () => setReveal(true));
   $("hideBtn").addEventListener("click", () => setReveal(false));
-  $("partyFacts").innerHTML = `<div><b>${euro(D.party.budget)}</b><span>budget</span></div><div><b>${fmtDate(D.party.date, { day: "numeric", month: "short" })}</b><span>feest</span></div><div><b>${esc(D.party.location)}</b><span>locatie</span></div>`;
+  $("partyFacts").innerHTML = `<div><dt>Datum van het feest:</dt><dd>${esc(fmtDate(D.party.date))}</dd></div><div><dt>Locatie:</dt><dd>${esc(D.party.location)}</dd></div><div><dt>Budget per cadeau:</dt><dd>${euro(D.party.budget)}</dd></div><div><dt>Nog te gaan:</dt><dd>${days} ${days === 1 ? "dag" : "dagen"}</dd></div>`;
   $("msgOpen").addEventListener("click", () => { $("msgBox").hidden = false; $("msgText").focus(); });
   $("msgCancel").addEventListener("click", () => { $("msgBox").hidden = true; });
   $("msgSend").addEventListener("click", () => {
@@ -102,7 +102,7 @@
       const wl = p.wishlist, t = scoreOf(p, "today");
       const status = !p.opened ? '<span class="chip warn"><i></i>Uitnodiging nog niet geopend</span>'
         : `<span class="chip ${wl.length ? "ok" : ""}"><i></i>${wl.length ? wl.length + (wl.length === 1 ? " wens" : " wensen") : "Nog geen lijst"}</span>`;
-      const play = t ? `<span class="chip blue">${nf(t)} vandaag</span>` : "";
+      const play = t ? `<span class="chip teal">${nf(t)} vandaag</span>` : "";
       const items = wl.length ? `<ul class="wl">${wl.map((w, i) => `<li class="${w.boughtBy && !p.me ? "bought" : ""}"><span class="n">${i + 1}</span><span class="t"><b>${esc(w.t)}</b><span>ongeveer ${euro(w.p)}${w.boughtBy && !p.me ? " · al gekocht door iemand" : ""}</span></span><span></span></li>`).join("")}</ul>`
         : `<div class="empty">${p.me ? "Je hebt nog niets op je lijst gezet." : esc(p.name) + " heeft nog geen verlanglijst gemaakt."}</div>`;
       return `<details class="person"><summary>${avatar(p)}<span class="nm"><b>${p.me ? esc(p.name) + " (jij)" : esc(p.name)}${p.host ? " · organisator" : ""}</b><span>${p.opened ? "Doet mee" : "Uitgenodigd"}</span></span><span class="chips row">${play}${status}</span>${chev}</summary><div class="body">${items}</div></details>`;

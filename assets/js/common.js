@@ -1,7 +1,7 @@
 /* Gedeelde helpers voor beheer.html en deelnemer.html */
 window.SS = (() => {
   const D = window.DEMO;
-  const COLORS = ["#0000D2", "#d42a20", "#14804f", "#8a3b2e", "#7a4bd1", "#232323", "#b8892a", "#2f6fb0", "#c2185b"];
+  const COLORS = ["#075753", "#E7000B", "#4EB1AB", "#B52B26", "#2F7D78", "#C0731B", "#7A5AA6", "#3D6FA8", "#A33A6B"];
   const $ = id => document.getElementById(id);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const store = {

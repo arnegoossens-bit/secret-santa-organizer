@@ -5,7 +5,7 @@
     get(k, d) { try { const v = localStorage.getItem("cp_" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem("cp_" + k, JSON.stringify(v)); } catch (e) {} }
   };
-  const COLORS = ["#0000D2", "#d42a20", "#14804f", "#8a3b2e", "#7a4bd1", "#232323", "#b8892a", "#2f6fb0"];
+  const COLORS = ["#075753", "#E7000B", "#4EB1AB", "#B52B26", "#2F7D78", "#C0731B", "#7A5AA6", "#3D6FA8"];
   const EXAMPLE = { org: { name: "Arne", mail: "" }, people: [{ n: "Sofie", m: "" }, { n: "Jonas", m: "" }, { n: "Lotte", m: "" }] };
 
   // state, restored from this browser if a draft exists
@@ -216,7 +216,7 @@
     const c = $("confetti"), r = c.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
     c.width = r.width * dpr; c.height = r.height * dpr;
     const g = c.getContext("2d"); g.scale(dpr, dpr);
-    const cols = ["#ffffff", "#ffc94a", "#ff8f86", "#5fe0b5", "#c9d2ff"];
+    const cols = ["#ffffff", "#4EB1AB", "#D8F0EF", "#ffd166", "#E7000B"];
     const P = Array.from({ length: 140 }, () => ({ x: r.width * (.2 + Math.random() * .6), y: r.height * .55, vx: (Math.random() - .5) * 9, vy: -6 - Math.random() * 9, s: 4 + Math.random() * 6, a: Math.random() * 6, va: (Math.random() - .5) * .4, c: cols[Math.floor(Math.random() * cols.length)] }));
     let f = 0;
     (function tick() {

@@ -6,37 +6,33 @@
 <title>Beheer je feestje · Secret Santa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/sso.css">
 <link rel="stylesheet" href="assets/css/app.css">
 <link rel="stylesheet" href="assets/css/beheer.css">
 </head>
 <body>
-<header class="hdr">
-  <div class="wrap">
-    <a class="logo" href="index.html" aria-label="Naar de Secret Santa homepage">
-      <svg viewBox="0 0 40 40" aria-hidden="true"><g class="peek"><circle cx="20" cy="15" r="5.6" fill="#ffcfae"/><ellipse cx="20" cy="19.2" rx="6.4" ry="4.8" fill="#fff"/><circle cx="18" cy="14.3" r=".8" fill="#242424"/><circle cx="22" cy="14.3" r=".8" fill="#242424"/><circle cx="20" cy="16" r="1.1" fill="#f08f78"/><path d="M14.4 10.2C14.8 4 19.6 .6 26.2 1.4c-2 2-2.2 5.2-.8 8.8z" fill="#d42a20"/><rect x="13.2" y="8.6" width="13.6" height="3.2" rx="1.6" fill="#fff"/><circle cx="26.6" cy="1.8" r="2.3" fill="#fff"/></g><rect x="6" y="14" width="28" height="24" rx="4" fill="#8a3b2e"/><rect x="3" y="10" width="34" height="7" rx="3" fill="#a9493a"/><path d="M12 26h7M22 26h7M8 32h7M18 32h7M28 32h4M8 20h4M15 20h7M25 20h7" stroke="#6a2b22" stroke-width="1.6"/></svg>
-      Secret Santa
-    </a>
-    <div class="hdr-actions">
-      <a class="btn light sm" href="deelnemer.html">Mijn Secret Santa</a>
-      <a class="btn sm" href="deelnemer.html#feestje">Alle verlanglijsten</a>
-    </div>
+<header class="sso-hdr">
+  <div class="sso-in">
+    <a class="sso-logo" href="index.html" aria-label="Naar de Secret Santa homepage"><img src="assets/img/sso/secret-santa-logo.png" alt="Secret Santa" width="165" height="70"></a>
+    <div class="sso-art" aria-hidden="true"><img class="sso-chim" src="assets/img/sso/chimney.webp" alt=""><img class="sso-deer" src="assets/img/sso/reindeer.png" alt=""><img class="sso-santa" src="assets/img/sso/santa.png" alt=""></div>
+    <div class="sso-actions"><a class="sso-btn light sm" href="deelnemer.html">Mijn Secret Santa</a><a class="sso-btn sm" href="deelnemer.html#feestje">Alle verlanglijsten</a></div>
   </div>
 </header>
 
 <main class="wrap page">
   <section class="intro">
     <p class="label">Beheer je feestje</p>
-    <h1 id="title">Familie Peeters, Kerst 2026</h1>
+    <h1>Jouw Secret Santa-lijst: <span class="accent" id="title">Familie Peeters, Kerst 2026</span></h1>
   </section>
 
   <div class="grid">
     <!-- status -->
     <div class="card c8">
-      <div class="row between"><h2>Hoe staat het ervoor?</h2><span class="chip blue" id="countdown"></span></div>
+      <div class="row between"><h2>Hoe staat het ervoor?</h2><span class="chip teal" id="countdown"></span></div>
       <div class="meters" id="meters"></div>
       <div class="row">
-        <button class="btn blue" type="button" id="remindBtn">Herinner wie nog niet reageerde</button>
+        <button class="btn" type="button" id="remindBtn">Herinner wie nog niet reageerde</button>
         <button class="btn light" type="button" id="updateOpen">Stuur een update naar iedereen</button>
       </div>
       <div class="compose" id="compose" hidden>
@@ -97,6 +93,17 @@
   <p class="demo">Prototype met voorbeelddata. Er worden geen mails verstuurd en wijzigingen blijven alleen in deze browser.</p>
 </main>
 
+<footer class="sso-ftr">
+  <div class="sso-in">
+    <div class="brand"><a class="sso-logo" href="index.html"><img src="assets/img/sso/secret-santa-logo.png" alt="Secret Santa" width="132" height="56"></a><a class="sso-btn" href="index.html#faq">Veelgestelde vragen</a></div>
+    <div><h3>Lees onze tips</h3><ul><li><a href="index.html#hoe">Zo organiseer je het</a></li><li><a href="index.html#troeven">Cadeau-ideeën</a></li><li><a href="index.html#faq">Budget en regels</a></li></ul></div>
+    <div><h3>Santa's Sleeroute</h3><ul><li><a href="sleeroute.html">Speel de demo</a></li><li><a href="deelnemer.html#feestje">Highscores</a></li><li><a href="index.html#merken">Voor merken</a></li></ul></div>
+    <div><h3>Je feestje</h3><ul><li><a href="feestje-aanmaken.html">Maak een feestje aan</a></li><li><a href="deelnemer.html">Mijn Secret Santa</a></li><li><a href="beheer.html">Beheer je feestje</a></li></ul></div>
+    <div class="legal"><span>Secret Santa Organizer · prototype Kerst 2026</span><span>Voorbeelddata, er wordt niets verstuurd</span></div>
+  </div>
+</footer>
+
+<script src="assets/js/sso.js"></script>
 <script src="assets/js/demo-data.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/beheer.js"></script>
