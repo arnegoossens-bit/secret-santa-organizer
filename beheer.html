@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Beheer je feestje · Secret Santa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/beheer.css">
+</head>
+<body>
+<header class="hdr">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="Naar de Secret Santa homepage">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g class="peek"><circle cx="20" cy="15" r="5.6" fill="#ffcfae"/><ellipse cx="20" cy="19.2" rx="6.4" ry="4.8" fill="#fff"/><circle cx="18" cy="14.3" r=".8" fill="#242424"/><circle cx="22" cy="14.3" r=".8" fill="#242424"/><circle cx="20" cy="16" r="1.1" fill="#f08f78"/><path d="M14.4 10.2C14.8 4 19.6 .6 26.2 1.4c-2 2-2.2 5.2-.8 8.8z" fill="#d42a20"/><rect x="13.2" y="8.6" width="13.6" height="3.2" rx="1.6" fill="#fff"/><circle cx="26.6" cy="1.8" r="2.3" fill="#fff"/></g><rect x="6" y="14" width="28" height="24" rx="4" fill="#8a3b2e"/><rect x="3" y="10" width="34" height="7" rx="3" fill="#a9493a"/><path d="M12 26h7M22 26h7M8 32h7M18 32h7M28 32h4M8 20h4M15 20h7M25 20h7" stroke="#6a2b22" stroke-width="1.6"/></svg>
+      Secret Santa
+    </a>
+    <div class="hdr-actions">
+      <a class="btn light sm" href="deelnemer.html">Mijn Secret Santa</a>
+      <a class="btn sm" href="deelnemer.html#feestje">Alle verlanglijsten</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap page">
+  <section class="intro">
+    <p class="label">Beheer je feestje</p>
+    <h1 id="title">Familie Peeters, Kerst 2026</h1>
+  </section>
+
+  <div class="grid">
+    <!-- status -->
+    <div class="card c8">
+      <div class="row between"><h2>Hoe staat het ervoor?</h2><span class="chip blue" id="countdown"></span></div>
+      <div class="meters" id="meters"></div>
+      <div class="row">
+        <button class="btn blue" type="button" id="remindBtn">Herinner wie nog niet reageerde</button>
+        <button class="btn light" type="button" id="updateOpen">Stuur een update naar iedereen</button>
+      </div>
+      <div class="compose" id="compose" hidden>
+        <div class="field"><label for="updText">Bericht aan alle deelnemers</label><textarea id="updText" placeholder="Bijvoorbeeld: we beginnen om 18 uur, neem iets mee voor het dessert."></textarea></div>
+        <div class="row"><button class="btn sm" type="button" id="updSend">Verstuur update</button><button class="linkbtn" type="button" id="updCancel">Annuleer</button></div>
+      </div>
+    </div>
+
+    <!-- details -->
+    <div class="card c4">
+      <div class="row between"><h2>Gegevens</h2><button class="linkbtn" type="button" id="editBtn">Aanpassen</button></div>
+      <dl class="details" id="details"></dl>
+      <form class="editform" id="editForm" hidden novalidate>
+        <div class="field"><label for="eName">Naam</label><input type="text" id="eName"></div>
+        <div class="field"><label for="eDate">Datum</label><input type="date" id="eDate"></div>
+        <div class="field"><label for="eLoc">Locatie</label><input type="text" id="eLoc"></div>
+        <div class="field"><label for="eBudget">Budget (€)</label><input type="number" id="eBudget" min="1" step="1"></div>
+        <div class="row"><button class="btn sm" type="submit">Opslaan</button><button class="linkbtn" type="button" id="editCancel">Annuleer</button></div>
+      </form>
+    </div>
+
+    <!-- participants -->
+    <div class="card c8">
+      <div class="row between"><h2>Deelnemers</h2><span class="chip" id="pCount"></span></div>
+      <div class="ptable" id="ptable" role="list"></div>
+      <form class="row addform" id="addForm" novalidate>
+        <label class="sr" for="addName">Naam</label><input type="text" id="addName" placeholder="Naam">
+        <label class="sr" for="addMail">E-mailadres</label><input type="email" id="addMail" placeholder="E-mailadres">
+        <button class="btn sm" type="submit">Voeg toe</button>
+      </form>
+      <p class="small muted" style="margin:0">Iemand toevoegen na de trekking? Dan trekken we de namen opnieuw en krijgt iedereen een nieuwe mail.</p>
+    </div>
+
+    <!-- highscores -->
+    <div class="card c4">
+      <div class="row between"><h2>Santa's Sleeroute</h2>
+        <div class="tabs" role="tablist" id="hsTabs"><button type="button" role="tab" data-kind="today" aria-selected="true">Vandaag</button><button type="button" role="tab" data-kind="total" aria-selected="false">Totaal</button></div></div>
+      <ol class="hs" id="hs"></ol>
+      <label class="toggle"><input type="checkbox" id="gameOn" checked><span class="switch"></span><span>Spel staat aan voor deze groep</span></label>
+    </div>
+
+    <!-- reveal + danger -->
+    <div class="card c6">
+      <h2>Alle trekkingen bekijken</h2>
+      <p class="muted" style="margin:0">Handig als iemand zijn mail kwijt is. Let op: dan weet jij ook wie jou trok.</p>
+      <div class="confirm" id="revealConfirm" hidden><p><b>Zeker weten?</b> Je ziet dan van iedereen wie hij of zij trok, ook jouw eigen Secret Santa.</p><div class="row"><button class="btn danger solid sm" type="button" id="revealYes">Toon alles</button><button class="linkbtn" type="button" id="revealNo">Toch niet</button></div></div>
+      <ul class="draws" id="draws" hidden></ul>
+      <div class="row"><button class="btn light" type="button" id="revealBtn">Toon alle trekkingen</button></div>
+    </div>
+    <div class="card c6">
+      <h2>Feestje verwijderen</h2>
+      <p class="muted" style="margin:0">Alle deelnemers, verlanglijsten en scores worden gewist. Dit kan je niet ongedaan maken.</p>
+      <div class="confirm" id="delConfirm" hidden><p>Typ <b>VERWIJDER</b> om te bevestigen.</p><input type="text" id="delText" aria-label="Typ VERWIJDER"><div class="row"><button class="btn danger solid sm" type="button" id="delYes" disabled>Verwijder definitief</button><button class="linkbtn" type="button" id="delNo">Annuleer</button></div></div>
+      <div class="row"><button class="btn danger" type="button" id="delBtn">Verwijder dit feestje</button></div>
+    </div>
+  </div>
+
+  <p class="demo">Prototype met voorbeelddata. Er worden geen mails verstuurd en wijzigingen blijven alleen in deze browser.</p>
+</main>
+
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/beheer.js"></script>
+</body>
+</html>

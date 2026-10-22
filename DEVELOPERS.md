@@ -10,6 +10,11 @@ Live: https://arnegoossens-bit.github.io/secret-santa-organizer/
 index.html                  Homepage
 feestje-aanmaken.html       Aanmaakflow in 3 stappen
 sleeroute.html              Santa's Sleeroute (adventsspel)
+deelnemer.html              Deelnemerspagina (mijn Secret Santa + het feestje)
+beheer.html                 Beheerpagina voor de organisator
+assets/css/app.css          Gedeelde stijl voor deelnemer en beheer
+assets/js/demo-data.js      Datamodel met voorbeelddata (window.DEMO)
+assets/js/common.js         Gedeelde helpers (window.SS): opslag, highscores, avatars
 assets/css/<pagina>.css     Stijl per pagina
 assets/js/<pagina>.js       Logica per pagina (vanilla JS, geen build-stap)
 assets/img/                 Screenshots die op de pagina's gebruikt worden
@@ -78,6 +83,28 @@ In de browserconsole is de spelstatus beschikbaar als `window.__sl` (bijvoorbeel
 - Stap 1 deelnemers, stap 2 instellingen (budget, datum, uitsluitingen, Sleeroute aan/uit), stap 3 uitnodiging.
 - `drawPossible()` controleert met een bipartite matching of de trekking met de gekozen uitsluitingen nog mogelijk is. Dezelfde check moet server-side gebeuren.
 - Concept wordt per browser bewaard in localStorage (`cp_draft`). Verzenden doet niets (`preventDefault`).
+
+## Deelnemerspagina (`deelnemer.html`, `assets/js/deelnemer.js`)
+Twee tabs, `#feestje` opent direct de tweede (het eindscherm van de game linkt daarheen).
+- **Mijn Secret Santa**: getrokken naam (eerst vervaagd, tik om te tonen), feestgegevens, anoniem bericht, status van de Sleeroute (dagscore, totaal, hint van vandaag of nog vergrendeld, eerdere hints, gok), verlanglijst van je getrokken persoon met "Ik koop dit" (zichtbaar voor iedereen behalve die persoon), cadeau-ideeën binnen budget, en je eigen verlanglijst (toevoegen, volgorde, verwijderen, delen).
+- **Het feestje**: highscores Vandaag en Totaal, en wie er meedoet met status en de verlanglijst van iedereen. Wie wie trok blijft geheim.
+- De dagscore van "jij" leest `sl_best_d12` uit de game, zodat een gespeelde vlucht meteen in de highscores staat.
+
+## Beheerpagina (`beheer.html`, `assets/js/beheer.js`)
+- Status: hoeveel deelnemers hun uitnodiging openden, een verlanglijst maakten en vandaag speelden; herinnering sturen naar wie achterloopt; update naar iedereen.
+- Feestgegevens aanpassen (naam, datum, locatie, budget).
+- Deelnemers: persoonlijke link kopiëren, uitnodiging opnieuw mailen, verwijderen (bevestiging, daarna nieuwe trekking), toevoegen met validatie.
+- Highscores Vandaag/Totaal en de Sleeroute aan/uit voor de groep.
+- Alle trekkingen tonen (met waarschuwing) en feestje verwijderen (typ VERWIJDER).
+
+## Datamodel (`assets/js/demo-data.js`)
+`window.DEMO` toont welke data de API moet leveren:
+- `party`: naam, datum, locatie, budget, `gameOn`, `adventDay`
+- `people[]`: id, naam, e-mail, `host`, `me`, `opened`, `today` (dagscore of null), `total`, `wishlist[]` ({text, price, boughtBy})
+- `draws`: gever-id naar ontvanger-id (in productie nooit volledig naar de client sturen, alleen de eigen trekking)
+- `giftIdeas`, `hints` (vandaag + eerdere dagen)
+
+Wijzigingen worden in het prototype bewaard in localStorage (`ss_people`, `ss_party`). Wis die om opnieuw te beginnen.
 
 ## Nog niet in het prototype
 - Hints uitzetten ("verrassing bewaren") per deelnemer

@@ -900,6 +900,7 @@
               <div class="tabs" role="tablist"><button type="button" role="tab" data-kind="today" aria-selected="true">Vandaag</button><button type="button" role="tab" data-kind="total" aria-selected="false">Totaal</button></div></div>
             <ol class="lb" id="lb"></ol>
             <p class="io-small lb-note" id="lbNote">Beste score van vandaag. Je mag vaker vliegen, alleen je beste telt.</p>
+            <a class="io-link" href="deelnemer.html#feestje">Bekijk het feestje en alle verlanglijsten</a>
           </div>
           <div class="io-actions">
             ${extraUsed ? `<button class="io-btn" id="againBtn" type="button">Vlieg opnieuw (demo)</button>` : `<button class="io-btn blue" id="adBtn" type="button">Extra vlucht via sponsorvideo</button>`}

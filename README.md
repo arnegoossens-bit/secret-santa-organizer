@@ -5,6 +5,8 @@ Speelbaar prototype van de vernieuwde Secret Santa Organizer in iO-stijl.
 - `index.html`: homepage met 3D-hero en scrollanimaties (code in `assets/`)
 - `feestje-aanmaken.html`: aanmaakflow in drie stappen
 - `sleeroute.html`: Santa's Sleeroute, het adventsspel in three.js
+- `deelnemer.html`: deelnemerspagina met je getrokken naam, verlanglijsten, highscores en wie er meedoet
+- `beheer.html`: beheerpagina voor de organisator
 
 Alle namen, scores en hints zijn voorbeelddata. Er worden geen mails verstuurd en er wordt niets opgeslagen op een server.
 
