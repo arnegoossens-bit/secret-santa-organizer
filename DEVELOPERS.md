@@ -58,13 +58,15 @@ Illustraties (logo, schoorsteen, rendier, kerstman, iconen) komen van de huidige
 1. **Intro** (`#intro`): uitleg, wat je vandaag kan verdienen, sponsor van de dag.
 2. **Vlucht** van `DURATION` = 45 s. `start()` → `reset()` → game loop `update(dt)`.
 3. **Dagrecord** (`startCelebrate()`): alleen bij een nieuwe persoonlijke dagscore. 4 s vlucht rond de slee met vuurwerk, dit is de basis voor de highscore-video. Nu wordt er alleen een stilstaand beeld bewaard (`S.snap`); een echte clip opnemen kan met `canvas.captureStream()` + `MediaRecorder`.
-4. **Eindscherm** (`showEnd()`): score, hintkaarten, gok van de dag, klassement, extra vlucht via sponsorvideo (`playAd()`, demo van 5 s).
+4. **Eindscherm** (`showEnd()`): score, hintkaarten, gok van de dag, klassement, opnieuw vliegen na 2 klantvideo's (`playAds()`, demo van 5 s per video).
 
 ### Spelregels (constanten bovenaan en in de code)
 | Wat | Waar | Waarde |
 |---|---|---|
 | Duur van een vlucht | `DURATION` | 45 s |
-| Hint van vandaag | `STREAK_FOR_HINT` | 1 hint per dag, vrijgespeeld met een reeks van 5 pakjes op rij raak (mis of toren = reeks terug naar 0) |
+| Dagstreak | `STREAK_MILESTONES`, `STREAK_BEFORE` | Elke dag met minstens één afgewerkte vlucht = streak +1. Dag gemist = streak terug naar 0, verdiende hints blijven |
+| Hints | `HINTS` | 5 per feestje, vrijgespeeld op dag 3, 6, 10, 15 en 20 van je streak |
+| Opnieuw vliegen | `ADS_FOR_REPLAY`, `AD_SECONDS` | Eerste vlucht van de dag is gratis. Elke volgende vlucht: eerst 2 klantvideo's volledig bekijken (niet overslaan). Beste vlucht van de dag telt |
 | Pakje in schoorsteen | `deliver()` | +100 × combo (combo tot ×5, +1 per 2 treffers op rij) |
 | Ster | update-loop | +100 (alleen punten) |
 | Sponsorballon (door de ring) | update-loop | +150 |
@@ -82,7 +84,7 @@ Illustraties (logo, schoorsteen, rendier, kerstman, iconen) komen van de huidige
 | Sponsor "Jouw Merk Hier" | Sponsor per adventsdag en per taal (naam, logo, video, cadeautip) |
 
 ### Te loggen events (voorstel)
-`round_start`, `round_end` (score, bezorgd, sterren, raak-percentage), `hint_unlocked`, `guess_set`, `sponsor_balloon_hit`, `sponsor_video_complete`, `share_click`.
+`round_start`, `round_end` (score, bezorgd, sterren, raak-percentage), `streak_day_counted`, `hint_unlocked`, `guess_set`, `sponsor_balloon_hit`, `sponsor_video_complete`, `share_click`.
 
 ### Debug
 In de browserconsole is de spelstatus beschikbaar als `window.__sl` (bijvoorbeeld `__sl.lives = 99`).

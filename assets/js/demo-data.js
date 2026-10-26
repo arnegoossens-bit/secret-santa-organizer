@@ -42,9 +42,9 @@ window.DEMO = (() => {
     { t: "Chocolade van een lokale chocolatier", p: 18 }, { t: "Plaid in zachte fleece", p: 25 }
   ];
   // hints die jouw Secret Santa (Elif) over zichzelf schreef; mogen een vals spoor zijn
-  const hints = {
-    today: "Drinkt elke ochtend twee koffie, zwart en zonder suiker.",
-    past: [[11, "Heeft een hekel aan rozijnen in kerstbrood."], [10, "Gaat elk jaar skiën in de krokusvakantie."], [9, "Speelt al jaren in een fanfare."], [8, "Draagt bijna altijd een sjaal, ook binnen."], [7, "Heeft twee katten."]]
-  };
-  return { party, people, draws, giftIdeas, hints };
+  // dagstreak: hints worden vrijgespeeld op dag 3, 6, 10, 15 en 20 van je reeks (max 5 per feestje)
+  const streak = { before: 9, milestones: [3, 6, 10, 15, 20] };
+  // de 5 hints die jouw Secret Santa (Elif) over zichzelf schreef; mogen een vals spoor zijn
+  const hints = ["Is de oudste van drie kinderen.", "Speelt al jaren in een fanfare.", "Drinkt elke ochtend twee koffie, zwart en zonder suiker.", "Heeft twee katten.", "Draagt bijna altijd een sjaal, ook binnen."];
+  return { party, people, draws, giftIdeas, hints, streak };
 })();

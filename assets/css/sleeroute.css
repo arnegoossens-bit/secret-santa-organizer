@@ -427,3 +427,18 @@ body :focus-visible{outline-color:var(--io-blue)}
 .tabs{background:#fff!important;border:2px solid #075753;border-radius:999px;padding:3px}
 .tabs button[aria-selected="true"]{background:#075753!important;color:#fff!important}
 main.play{position:relative;z-index:1;padding-top:24px}
+
+/* dagstreak + video's voor opnieuw vliegen */
+.starpips b.stk{font:700 13px/1 var(--io-font);color:#2A2A2A;margin:0 2px}
+.streak{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.streak span{background:#fff;border:1px solid #D8F0EF;border-radius:12px;padding:8px 6px;text-align:center;display:flex;flex-direction:column;gap:2px;color:#6B6B6B}
+.streak span b{font:400 20px/1 var(--io-display);color:#6B6B6B}
+.streak span small{font-size:11px;font-weight:600}
+.streak span.on{background:#D8F0EF;border-color:#4EB1AB;color:#003D39}
+.streak span.on b{color:#075753}
+.streak span.now{background:#E7000B;border-color:#E7000B;color:#fff;box-shadow:0 0 0 3px #fde2e3}
+.streak span.now b{color:#fff}
+.past li.lockd{opacity:.55}
+.past li em{font-style:normal;color:#6B6B6B;font-size:12px}
+.adprog{width:min(320px,80%);height:6px;border-radius:6px;background:#ffffff30;overflow:hidden}
+.adprog i{display:block;height:100%;background:var(--mint);transform-origin:left;transform:scaleX(0)}

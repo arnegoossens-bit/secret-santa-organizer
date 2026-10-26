@@ -43,7 +43,7 @@
         <p class="cel-score" data-score>0</p>
         <p class="cel-prev" data-prev></p>
       </div>
-      <div class="coach" id="coach" hidden><b>Zie je een gouden ring rond een schoorsteen?</b> Dan is het nu. Raak er 5 op rij voor de hint van vandaag.</div>
+      <div class="coach" id="coach" hidden><b>Zie je een gouden ring rond een schoorsteen?</b> Dan is het nu. Elk pakje erin geeft punten. Land veilig: elke afgewerkte vlucht houdt je dagstreak in leven.</div>
       <button class="dropbtn" id="dropBtn" type="button" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9" width="16" height="12" rx="2" fill="#e8332a"/><path d="M12 9v12M4 14h16" stroke="#15102a" stroke-width="2.4"/><path d="M12 9c-2-4-6-3-4 0M12 9c2-4 6-3 4 0" stroke="#15102a" stroke-width="2" fill="none"/></svg>
         Drop in de schoorsteen
@@ -53,15 +53,15 @@
         <div class="io-panel">
           <p class="io-label">Adventsdag 12 · zaterdag 12 december</p>
           <h1 class="io-title">Santa's Sleeroute</h1>
-          <p class="io-text">Vlieg 45 seconden over het dorp en bezorg zoveel mogelijk pakjes. Haal een reeks van 5 pakjes op rij en je krijgt de hint van vandaag over wie jou getrokken heeft.</p>
+          <p class="io-text">Vlieg 45 seconden over het dorp en bezorg zoveel mogelijk pakjes. Elke dag dat je vliegt, groeit je dagstreak. Op dag 3, 6, 10, 15 en 20 van je reeks speel je een hint vrij over wie jou getrokken heeft.</p>
           <ol class="io-steps">
             <li><span class="io-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M5 12l4-4M5 12l4 4M19 12l-4-4M19 12l-4 4"/></svg></span><div><b>Stuur</b><span>Sleep links en rechts, of gebruik de pijltjes.</span></div></li>
-            <li><span class="io-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="1.5"/><path d="M12 10v10M5 14h14M12 3v4M9.5 5.5L12 8l2.5-2.5"/></svg></span><div><b>Bezorg pakjes, 5 op rij</b><span>Elk pakje in een schoorsteen is +100 punten. Licht er een goud op? Tik of druk op spatie. Mis je, dan begint je reeks opnieuw.</span></div></li>
+            <li><span class="io-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="1.5"/><path d="M12 10v10M5 14h14M12 3v4M9.5 5.5L12 8l2.5-2.5"/></svg></span><div><b>Bezorg pakjes</b><span>Elk pakje in een schoorsteen is +100 punten, met combo tot ×5. Licht er een goud op? Tik of druk op spatie.</span></div></li>
             <li><span class="io-ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.1 1.3 6L12 16.4 6.5 19.4l1.3-6-4.5-4.1 6.1-.7z"/></svg></span><div><b>Vang sterren, ontwijk torens</b><span>Elke ster is +100 punten. Een toren kost een muts.</span></div></li>
           </ol>
           <div class="io-today">
             <span class="io-small">Vandaag te verdienen</span>
-            <div class="io-slots"><span>Hint van vandaag · reeks van 5</span><span>Dagrecord en totaalstand</span><span>Je gok van de dag</span></div>
+            <div class="io-slots"><span>Dagstreak 9 → 10 · hint 3</span><span>Dagrecord en totaalstand</span><span>Je gok van de dag</span></div>
           </div>
           <div class="io-actions">
             <button class="io-btn blue" id="startBtn" type="button">Start de vlucht</button>
@@ -73,11 +73,12 @@
       <div class="overlay io io-end" id="end" hidden></div>
 
       <div class="ad" id="ad" hidden>
-        <span class="adlabel">Advertentie · demo</span>
+        <span class="adlabel" id="adlabel">Advertentie · demo</span>
         <span class="count" id="adcount">5</span>
         <div class="sp-badge">JM</div>
         <h3>Jouw Merk Hier</h3>
-        <p>Hier draait een korte sponsorvideo. Na 5 seconden krijg je een extra poging.</p>
+        <p>Hier draait een korte video van een partner.</p>
+        <div class="adprog"><i id="adbar"></i></div>
       </div>
 
       <button class="sound" id="soundBtn" aria-pressed="true">Geluid aan</button>

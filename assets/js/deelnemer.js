@@ -36,13 +36,15 @@
   });
 
   // game card
-  const hintOpen = store.get("sl_hint_d" + D.party.adventDay, false);
+  const played = store.get("sl_streak_d" + D.party.adventDay, false);
+  const streak = D.streak.before + (played ? 1 : 0), M = D.streak.milestones;
+  const earned = M.filter(m => m <= streak).length, nxt = M.find(m => m > streak);
   const today = myToday(), rankToday = board("today").findIndex(r => r.p.me) + 1, total = scoreOf(I, "total");
-  $("gameStatus").innerHTML = `<div><b>${today ? nf(today) : "0"}</b><span>vandaag</span></div><div><b>${today ? rankToday + "e" : "–"}</b><span>dagstand</span></div><div><b>${nf(total)}</b><span>totaal</span></div>`;
+  $("gameStatus").innerHTML = `<div><b>${streak}</b><span>dagstreak</span></div><div><b>${today ? nf(today) : "0"}</b><span>vandaag${today ? " · " + rankToday + "e" : ""}</span></div><div><b>${nf(total)}</b><span>totaal</span></div>`;
   const hb = $("hintBox");
-  hb.classList.toggle("locked", !hintOpen);
-  hb.innerHTML = `<span class="k">Hint van vandaag</span><p>${hintOpen ? esc(D.hints.today) : "Nog op slot. Bezorg 5 pakjes op rij in Santa's Sleeroute."}</p>
-    <details><summary>Eerdere hints (${D.hints.past.length})</summary><ul>${D.hints.past.map(([d, h]) => `<li><b>Dag ${d}</b><span>${esc(h)}</span></li>`).join("")}</ul></details>`;
+  hb.innerHTML = `<span class="k">Je hints (${earned} van ${M.length})</span>
+    <ul class="hl">${D.hints.slice(0, earned).map((h, i) => `<li><b>Hint ${i + 1}</b><span>${esc(h)}</span></li>`).join("")}</ul>
+    <p class="nx">${played ? "Je vloog vandaag al, je streak telt." : `<b>Vlieg vandaag</b> om je streak op ${streak + 1} te brengen.`} ${nxt ? (nxt === streak + 1 && !played ? `Dan opent hint ${earned + 1}.` : `Volgende hint op dag ${nxt} van je reeks.`) : "Je hebt alle hints."}</p>`;
   const guess = store.get("sl_guess", null);
   $("guessTxt").textContent = guess ? `Je gok van vandaag: ${guess}` : "Nog geen gok vandaag";
 

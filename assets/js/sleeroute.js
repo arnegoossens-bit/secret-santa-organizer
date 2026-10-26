@@ -3,7 +3,14 @@
   // ---- example data, to be replaced by the API (see DEVELOPERS.md) ----
   const TODAY = 12;                                   // adventsdag
   const TODAY_HINT = "Drinkt elke ochtend twee koffie, zwart en zonder suiker.";
-  const STREAK_FOR_HINT = 5;                          // pakjes op rij raak voor de hint van vandaag
+  // dagstreak: elke dag dat je minstens één vlucht afwerkt, groeit je reeks met 1. Op deze dagen van je reeks speel je een hint vrij.
+  const STREAK_MILESTONES = [3, 6, 10, 15, 20];
+  const STREAK_BEFORE = 9;                            // jouw reeks t/m gisteren (dag 3 tot 11 elke dag gespeeld)
+  // de 5 hints die jouw Santa over zichzelf schreef, in volgorde van vrijspelen
+  const HINTS = ["Is de oudste van drie kinderen.", "Speelt al jaren in een fanfare.", TODAY_HINT, "Heeft twee katten.", "Draagt bijna altijd een sjaal, ook binnen."];
+  const ADS_FOR_REPLAY = 2;                           // klantvideo's om opnieuw te vliegen (eerste vlucht van de dag is gratis)
+  const AD_SECONDS = 5;                               // demo-lengte per video
+  const ADS = [["JM", "Jouw Merk Hier", "Warme sokken voor koude kerstvoeten."], ["CB", "Cadeau & Co", "Het cadeau dat niemand op zijn lijst durfde te zetten."]];
   const PEOPLE = ["Sofie", "Jonas", "Lotte", "Wout", "Elif", "Bram", "Noor", "Tante Rita"];
   const BOARD_TODAY = [["Sofie", 1650], ["Jonas", 1420], ["Wout", 1210], ["Lotte", 980], ["Noor", 820], ["Elif", 640], ["Bram", 0]];
   const BOARD_TOTAL = [["Sofie", 14220], ["Jonas", 13180], ["Lotte", 11050], ["Wout", 9860], ["Elif", 8120], ["Bram", 6400], ["Noor", 5240]];
@@ -15,10 +22,14 @@
     set(k, v) { try { localStorage.setItem("sl_" + k, JSON.stringify(v)); } catch (e) {} }
   };
   const $ = id => document.getElementById(id);
+  const playedToday = () => store.get("streak_d" + TODAY, false);
+  const streakNow = () => STREAK_BEFORE + (playedToday() ? 1 : 0);
+  const hintsEarned = n => STREAK_MILESTONES.filter(m => m <= n).length;
+  const nextMilestone = n => STREAK_MILESTONES.find(m => m > n);
   const stage = $("stage"), cv = $("cv"), fxEl = $("fx");
 
   /* ---------- end-screen helpers ---------- */
-  const PAST = [
+  const PAST_UNUSED = [
     [11, "Heeft een hekel aan rozijnen in kerstbrood."], [10, "Gaat elk jaar skiën in de krokusvakantie."], [9, "Speelt al jaren in een fanfare."],
     [8, "Draagt bijna altijd een sjaal, ook binnen."], [7, "Heeft twee katten."], [6, "Leest elke avond voor het slapengaan."], [5, "Fietst elke dag naar het werk."],
     [4, "Is dol op Indisch eten."], [3, "Heeft ooit een marathon gelopen."], [2, "Spaart oude vinylplaten."], [1, "Is de oudste van drie kinderen."]
@@ -43,8 +54,9 @@
   let showAll = false;
   function renderPast() {
     const el = $("past"); if (!el) return;
-    el.innerHTML = PAST.slice(0, showAll ? PAST.length : 3).map(([d, h]) => `<li><b>Dag ${d}</b><span>${h}</span></li>`).join("");
-    $("moreBtn").textContent = showAll ? "Toon minder" : "Toon alle 11 dagen";
+    const n = hintsEarned(streakNow());
+    el.innerHTML = HINTS.slice(0, n).map((h, i) => `<li><b>Hint ${i + 1}</b><span>${h} <em>(dag ${STREAK_MILESTONES[i]} van je reeks)</em></span></li>`).join("")
+      + HINTS.slice(n).map((h, i) => `<li class="lockd"><b>Hint ${n + i + 1}</b><span>Op slot tot dag ${STREAK_MILESTONES[n + i]} van je reeks</span></li>`).join("");
   }
   function renderGuess() {
     const el = $("gchips"); if (!el) return;
@@ -606,7 +618,7 @@
     sfx.drop();
   }
   function hurt() {
-    S.lives--; S.inv = 1.6; S.shake = .5; S.combo = 0; setCombo(); buildPips();
+    S.lives--; S.inv = 1.6; S.shake = .5; S.combo = 0; setCombo();
     burst(new T.Vector3(S.x, SLEIGH_Y, 0), 0xc4583f, 40, 6);
     sfx.hit(); buildLives();
     const hf = $("hitflash"); hf.classList.add("on"); setTimeout(() => hf.classList.remove("on"), 60);
@@ -615,11 +627,7 @@
   }
   function deliver(h, p) {
     h.delivered = true; S.delivered++; S.combo++; S.best = Math.max(S.best, S.combo);
-    if (S.combo >= STREAK_FOR_HINT && !store.get("hint_d" + TODAY, false)) {
-      store.set("hint_d" + TODAY, true); S.hintNow = true;
-      setTimeout(() => { toast("Reeks van " + STREAK_FOR_HINT + "! Hint van vandaag vrijgespeeld"); sfx.hint(); }, 250);
-    }
-    buildPips();
+
     const m = setCombo(), pts = 100 * m;
     S.score += pts;
     h.wm.emissive.setHex(0xffb35c); h.wm.emissiveIntensity = 1.6; h.wm.color.setHex(0xffd9a0);
@@ -755,7 +763,7 @@
         }
       }
       if (!p.done && y < 1.3) {
-        p.done = true; S.combo = 0; setCombo(); buildPips();
+        p.done = true; S.combo = 0; setCombo();
         burst(p.g.position, 0xeef0ff, 14, 3, 2); popNum(p.g.position, "mis", "#b3a8d6"); sfx.miss();
       }
       if (p.done) scene.remove(p.g);
@@ -815,9 +823,10 @@
   const hatSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18c2-8 7-13 15-13-2 3-2 7-1 13z" fill="#e8332a"/><rect x="2" y="16.5" width="17" height="4.5" rx="2.2" fill="#f6f1ff"/><circle cx="18.5" cy="5" r="2.6" fill="#f6f1ff"/></svg>';
   function buildLives() { livesEl.innerHTML = [0, 1, 2].map(i => hatSvg.replace("<svg", `<svg class="${i < S.lives ? "" : "lost"}"`)).join(""); livesEl.setAttribute("aria-label", `${Math.max(0, S.lives)} mutsen over`); }
   function buildPips() {
-    const got = store.get("hint_d" + TODAY, false);
-    pipsEl.innerHTML = got ? '<em>Hint van vandaag ✓</em>' :
-      '<em>Reeks</em>' + Array.from({ length: STREAK_FOR_HINT }, (_, i) => `<span class="${i < S.combo ? "on" : ""}"></span>`).join("") + '<em class="tg">hint</em>';
+    const n = streakNow(), nxt = nextMilestone(n);
+    pipsEl.innerHTML = playedToday()
+      ? `<em>Dagstreak ${n} ✓</em>`
+      : `<em>Dagstreak</em><b class="stk">${n} → ${n + 1}</b><em class="tg">${nxt === n + 1 ? "hint na deze vlucht" : "landen telt"}</em>`;
   }
   let lastScore = -1, lastDel = -1;
   function syncHud() {
@@ -829,7 +838,6 @@
 
   /* ---------- screens ---------- */
   const intro = $("intro"), endEl = $("end"), adEl = $("ad");
-  let extraUsed = false;
   let coachT = 0;
   function start() {
     initAudio();
@@ -860,7 +868,12 @@
     const prevDay = store.get("best_d" + TODAY, 0), isRecord = S.celebrated;
     store.set("best_d" + TODAY, Math.max(prevDay, S.score));
     const rankToday = boardRows("today", 0).findIndex(r => r.me) + 1;
-    const hintOpen = store.get("hint_d" + TODAY, false);
+    const firstToday = !playedToday();
+    if (firstToday) store.set("streak_d" + TODAY, true);
+    const streak = streakNow(), earned = hintsEarned(streak), nxt = nextMilestone(streak);
+    S.hintNow = firstToday && STREAK_MILESTONES.includes(streak);
+    if (S.hintNow) setTimeout(() => { toast(`Dagstreak ${streak}! Hint ${earned} van ${HINTS.length} vrijgespeeld`); sfx.hint(); }, 900);
+    const hintOpen = S.hintNow;
     const acc = S.drops ? Math.round(S.delivered / S.drops * 100) : 0;
     boardKind = "today";
     endEl.innerHTML = `
@@ -868,7 +881,8 @@
         <section class="end-col">
           <p class="io-label">${S.stuck ? "Vastgelopen tegen een toren" : "Route afgewerkt"} · adventsdag ${TODAY}</p>
           <h2 class="io-title">${S.score.toLocaleString("nl-BE")} punten${isRecord ? ' <span class="rec">Dagrecord</span>' : ""}</h2>
-          <p class="io-text">Je staat <b>${rankToday}e</b> van 8 in de dagstand van Familie Peeters. ${hintOpen ? (S.hintNow ? "Je haalde een reeks van " + STREAK_FOR_HINT + " en speelde de hint van vandaag vrij." : "De hint van vandaag had je al.") : "Geen hint vandaag: bezorg " + STREAK_FOR_HINT + " pakjes op rij."}</p>
+          <p class="io-text">Je staat <b>${rankToday}e</b> van 8 in de dagstand van Familie Peeters. ${firstToday ? `Je dagstreak staat nu op <b>${streak} dagen</b>.` : `Je streak van vandaag telde al: <b>${streak} dagen</b>.`} ${S.hintNow ? `Daarmee speel je <b>hint ${earned}</b> vrij.` : nxt ? `Nog <b>${nxt - streak} ${nxt - streak === 1 ? "dag" : "dagen"}</b> tot je volgende hint.` : "Je hebt alle hints."}</p>
+          <div class="streak" aria-label="Dagstreak ${streak} dagen">${STREAK_MILESTONES.map((m, i) => `<span class="${m <= streak ? "on" : ""}${S.hintNow && m === streak ? " now" : ""}"><b>${m}</b><small>hint ${i + 1}</small></span>`).join("")}</div>
           <div class="io-stats">
             <div><b>${S.delivered}</b><span>bezorgd</span></div>
             <div><b>${acc}%</b><span>raak</span></div>
@@ -880,11 +894,11 @@
             <div class="hsv-txt"><b>Je highscore-video staat klaar</b><span>Een korte clip van je dagrecord om te delen in de groepschat.</span>
               <div class="hsv-act"><button class="io-btn light" id="replayBtn" type="button">Bekijk opnieuw</button><button class="io-btn blue" id="shareVid" type="button">Deel video</button></div></div>
           </div>` : ""}
-          <h3 class="io-h3">Hint van vandaag</h3>
+          <h3 class="io-h3">${S.hintNow ? "Nieuwe hint" : "Je volgende hint"}</h3>
           <div class="cards one" id="cards">
-            <div class="fc ${hintOpen ? "earned" : "locked"}"><div class="fc-in"><div class="fc-front"><span>Adventsdag ${TODAY}</span><b>${hintOpen ? "Open me" : "Reeks van " + STREAK_FOR_HINT}</b></div><div class="fc-back"><span>Hint van je Santa</span><p>${hintOpen ? TODAY_HINT : "Bezorg " + STREAK_FOR_HINT + " pakjes op rij zonder te missen om de hint van vandaag te openen. Je kan het opnieuw proberen."}</p>${hintOpen ? '<small>Let op: hints mogen een vals spoor zijn.</small>' : ""}</div></div></div>
+            <div class="fc ${hintOpen ? "earned" : "locked"}"><div class="fc-in"><div class="fc-front"><span>${hintOpen ? `Dagstreak ${streak}` : `Volgende hint`}</span><b>${hintOpen ? "Open me" : nxt ? `Dag ${nxt}` : "Alles open"}</b></div><div class="fc-back"><span>${hintOpen ? `Hint ${earned} van je Santa` : "Nog op slot"}</span><p>${hintOpen ? HINTS[earned - 1] : nxt ? `Kom elke dag terug en vlieg minstens één keer. Op dag ${nxt} van je reeks opent hint ${earned + 1}. Een dag gemist? Dan begint je reeks opnieuw.` : "Je speelde alle hints vrij. Tijd om te raden."}</p>${hintOpen ? '<small>Let op: hints mogen een vals spoor zijn.</small>' : ""}</div></div></div>
           </div>
-          <details class="pastbox"><summary>Hints van eerdere dagen</summary><ul class="past" id="past"></ul><button class="more" id="moreBtn" type="button">Toon alle 11 dagen</button></details>
+          <details class="pastbox"><summary>Al je hints (${earned} van ${HINTS.length})</summary><ul class="past" id="past"></ul></details>
         </section>
         <section class="end-col">
           <div class="io-card guesscard">
@@ -903,10 +917,10 @@
             <a class="io-link" href="deelnemer.html#feestje">Bekijk het feestje en alle verlanglijsten</a>
           </div>
           <div class="io-actions">
-            ${extraUsed ? `<button class="io-btn" id="againBtn" type="button">Vlieg opnieuw (demo)</button>` : `<button class="io-btn blue" id="adBtn" type="button">Extra vlucht via sponsorvideo</button>`}
+            <button class="io-btn blue" id="adBtn" type="button">Opnieuw vliegen</button>
             <button class="io-btn light" id="shareBtn" type="button">Deel je score</button>
-            ${extraUsed ? "" : `<button class="io-link" id="againLink" type="button">Gewoon opnieuw (demo)</button>`}
           </div>
+          <p class="io-small">Opnieuw vliegen? Bekijk eerst ${ADS_FOR_REPLAY} korte video's van onze partners. Je beste vlucht van vandaag telt.</p>
           <p class="io-small">Morgen opent adventsdag ${TODAY + 1} met een nieuwe route en een nieuwe hint. <a class="io-link" href="index.html">Terug naar de homepage</a></p>
         </section>
       </div>`;
@@ -927,19 +941,26 @@
       const b = e.target.closest("button"); if (!b) return;
       store.set("guess", b.dataset.p); renderGuess(); toast(`Gok opgeslagen: ${b.dataset.p}`);
     });
-    $("moreBtn").addEventListener("click", () => { showAll = !showAll; renderPast(); });
     $("shareBtn").addEventListener("click", async e => {
       const txt = `Ik bezorgde ${S.delivered} pakjes (${S.score} punten) in Santa's Sleeroute van Familie Peeters. Wie doet beter? secretsantaorganizer.com`;
       try { await navigator.clipboard.writeText(txt); e.target.textContent = "Gekopieerd"; } catch (err) { e.target.textContent = "Kopiëren lukt hier niet"; }
       setTimeout(() => { e.target.textContent = "Deel je score"; }, 1800);
     });
-    $("adBtn")?.addEventListener("click", playAd);
-    $("againBtn")?.addEventListener("click", start);
-    $("againLink")?.addEventListener("click", start);
+    $("adBtn")?.addEventListener("click", () => playAds(0));
   }
-  function playAd() {
-    adEl.hidden = false; let n = 5; $("adcount").textContent = n;
-    const iv = setInterval(() => { n--; $("adcount").textContent = n; if (n <= 0) { clearInterval(iv); adEl.hidden = true; extraUsed = true; start(); toast("Extra vlucht van Jouw Merk Hier", true); } }, 1000);
+  // opnieuw vliegen = eerst ADS_FOR_REPLAY klantvideo's volledig bekijken (niet overslaan)
+  function playAds(i) {
+    const [badge, brand, line] = ADS[i % ADS.length];
+    adEl.hidden = false;
+    $("adlabel").textContent = `Video ${i + 1} van ${ADS_FOR_REPLAY} · advertentie (demo ${AD_SECONDS} s)`;
+    adEl.querySelector(".sp-badge").textContent = badge; adEl.querySelector("h3").textContent = brand; adEl.querySelector("p").textContent = line;
+    const bar = $("adbar"); bar.style.transition = "none"; bar.style.transform = "scaleX(0)"; void bar.offsetWidth;
+    bar.style.transition = `transform ${AD_SECONDS}s linear`; bar.style.transform = "scaleX(1)";
+    let n = AD_SECONDS; $("adcount").textContent = n;
+    const iv = setInterval(() => { n--; $("adcount").textContent = Math.max(0, n);
+      if (n <= 0) { clearInterval(iv);
+        if (i + 1 < ADS_FOR_REPLAY) playAds(i + 1);
+        else { adEl.hidden = true; start(); toast(`Nieuwe vlucht, mogelijk gemaakt door ${ADS.slice(0, ADS_FOR_REPLAY).map(a => a[1]).join(" en ")}`, true); } } }, 1000);
   }
 
   const fsBtn = $("fsBtn");
